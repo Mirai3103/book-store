@@ -1,0 +1,9 @@
+Home:
+    +Flash sale
+    +Mã giảm giá
+    +Xu hướng
+    +Sản phẩm mới
+    +Series truyện
+    +Sách nổi bật
+    +Xem nhiều
+

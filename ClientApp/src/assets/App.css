@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    background-color: #fbfcff;
+}
+
+@layer {
+    abbr {
+        border-bottom: none !important;
+        cursor: help;
+        text-decoration: none !important;
+    }
+    .text-hover-primary:hover {
+        @apply text-primary;
+        cursor: pointer;
+    }
+}
+
+@keyframes bounce-loader {
+    to {
+        opacity: 0.5;
+        transform: translateY(-0.6rem);
+    }
+}
+
+.bounce-loading {
+    display: flex;
+    justify-content: center;
+}
+/* a=  "Bookstore" -> a.length = 9 */
+.bounce-loading > span {
+    animation: bounce-loader 1s infinite alternate;
+}
+
+.bounce-loading > span:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.bounce-loading > span:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.bounce-loading > span:nth-child(4) {
+    animation-delay: 0.45s;
+}
+
+.bounce-loading > span:nth-child(5) {
+    animation-delay: 0.6s;
+}
+
+.bounce-loading > span:nth-child(6) {
+    animation-delay: 0.75s;
+}
+
+.bounce-loading > span:nth-child(7) {
+    animation-delay: 0.9s;
+}
+
+.bounce-loading > span:nth-child(8) {
+    animation-delay: 1.05s;
+}
+
+.bounce-loading > span:nth-child(9) {
+    animation-delay: 1.2s;
+}
+
+.truncate-two-lines {
+    @apply text-ellipsis overflow-hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+@keyframes bounce-circle-loader {
+    to {
+        opacity: 0.1;
+        transform: translateY(-1rem);
+    }
+}
+
+.bounce-cirle-loading {
+    display: flex;
+    justify-content: center;
+}
+
+.bounce-cirle-loading > div {
+    width: 1rem;
+    height: 1rem;
+    margin: 0 0.5rem;
+    background: #02d871;
+    border-radius: 50%;
+    animation: bounce-circle-loader 0.6s infinite alternate;
+}
+
+.bounce-cirle-loading > div:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.bounce-cirle-loading > div:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.bounce-cirle-loading > div:last-child {
+    animation-delay: 0.45s;
+}
