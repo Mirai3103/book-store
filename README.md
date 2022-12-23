@@ -1,7 +1,5 @@
 # Dự án cửa hàng báng sách
 
-## Sử dụng
-
 ### Backend:
 
 -   ASP.NET Core 6.0
