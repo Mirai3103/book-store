@@ -2,6 +2,7 @@ import React from "react";
 import { IBookPreview } from "../../types/ServerEntity";
 import Rating from "@mui/material/Rating";
 import { toMoneyStringFormat } from "../../utils/helper";
+import { useNavigate } from "react-router-dom";
 interface IBookPreviewProps {
     book?: IBookPreview;
     className?: string;
@@ -21,12 +22,17 @@ const tempBook: IBookPreview = {
 
 export default function BookPreview({ book = tempBook, className }: IBookPreviewProps) {
     const finalPrice = book.price - (book.price * book.discount) / 100;
+    const navigate = useNavigate();
+    const handleBookClick = () => {
+        navigate(`/book/${book.alias}`);
+    };
     return (
         <div
             className={
                 "flex flex-col bg-white py-3 group shadow-md my-1 hover:shadow-xl cursor-pointer px-2 " + className ??
                 "w-56"
             }
+            onClick={handleBookClick}
         >
             <div className="py-1 h-44 flex justify-center items-center relative mb-3">
                 <img
