@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 public class HttpResponseException : Exception
 {
-    private HttpStatusCode notFound;
 
     public HttpResponseException(HttpStatusCode statusCode, string message = "Error") : base(message)
     {

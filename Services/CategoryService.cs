@@ -1,9 +1,9 @@
 
-using book_ecommerce.Models;
 using System.Linq;
 using System.Net;
-
-class CategoryService : ICategoryService
+using book_ecommerce.Models;
+namespace book_ecommerce.Servies;
+public class CategoryService : ICategoryService
 {
     private readonly BookdataContext _context;
     public CategoryService(BookdataContext context)

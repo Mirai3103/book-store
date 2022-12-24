@@ -1,5 +1,6 @@
 using System.Net;
 using book_ecommerce.Models;
+namespace book_ecommerce.Servies;
 public class BookService : IBookService
 {
     private readonly BookdataContext _context;
