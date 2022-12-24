@@ -7,7 +7,10 @@ export default function Button({ children, className, ...props }: Props) {
         <button
             type="button"
             {...props}
-            className={"bg-primary text-white rounded-md px-2 py-2 hover:bg-primary-dark " + className}
+            className={
+                "bg-primary text-white rounded-md px-2 py-2 hover:bg-primary-dark flex justify-center items-center " +
+                className
+            }
         >
             {children}
         </button>
@@ -20,7 +23,7 @@ export function ButtonOutline({ children, className, ...props }: Props) {
             type="button"
             {...props}
             className={
-                "border-2 hoverv border-primary text-primary rounded-md px-2 py-2 hover:bg-primary-dark hover:text-white " +
+                "border-2 hoverv border-primary text-primary rounded-md px-2 py-2 hover:bg-primary-dark hover:text-white flex justify-center items-center" +
                 className
             }
         >
