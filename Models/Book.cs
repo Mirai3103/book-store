@@ -51,7 +51,7 @@ public partial class Book
 
     public DateTime? DeletedAt { get; set; }
 
-    public string BookImages { get; set; } = null!;
+    public string ImageCover { get; set; } = null!;
 
     public int? ProviderId { get; set; }
 
@@ -61,23 +61,21 @@ public partial class Book
 
     public int? CategoryId { get; set; }
 
-    public virtual ICollection<Billdetail>? Billdetails { get; } = new List<Billdetail>();
+    public virtual ICollection<Billdetail> Billdetails { get; } = new List<Billdetail>();
 
-    public virtual ICollection<Cartdetail>? Cartdetails { get; } = new List<Cartdetail>();
+    public virtual ICollection<Cartdetail> Cartdetails { get; } = new List<Cartdetail>();
 
     public virtual Category? Category { get; set; }
+
+    public virtual ICollection<Image> Images { get; set; } = new List<Image>();
 
     public virtual Provider? Provider { get; set; }
 
     public virtual Publisher? Publisher { get; set; }
 
-    public virtual ICollection<Review>? Reviews { get; } = new List<Review>();
+    public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
 
     public virtual Series? Series { get; set; }
-    public Book()
-    {
-
-    }
     public Book(Book otherBook)
     {
         this.Id = otherBook.Id;
@@ -103,14 +101,14 @@ public partial class Book
         this.CreatedAt = otherBook.CreatedAt;
         this.UpdatedAt = otherBook.UpdatedAt;
         this.DeletedAt = otherBook.DeletedAt;
-        this.BookImages = otherBook.BookImages;
+        this.ImageCover = otherBook.ImageCover;
         this.ProviderId = otherBook.ProviderId;
         this.PublisherId = otherBook.PublisherId;
         this.SeriesId = otherBook.SeriesId;
         this.CategoryId = otherBook.CategoryId;
-        Billdetails = null;
-        Cartdetails = null;
-        Reviews = null;
 
+    }
+    public Book()
+    {
     }
 }

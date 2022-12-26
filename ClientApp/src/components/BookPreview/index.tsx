@@ -16,7 +16,7 @@ const tempBook: IBookPreview = {
     episode: "Tập 14",
     title: "Re:zero - Bắt Đầu Lại Ở Thế Giới Khác 14 - Tặng Kèm Bookmark PVC In Màu",
     name: "Re:zero - Bắt Đầu Lại Ở Thế Giới Khác 14",
-    bookImages: "https://cdn0.fahasa.com/media/catalog/product/b/_/b_a-1-re-14.jpg",
+    imageCover: "https://cdn0.fahasa.com/media/catalog/product/b/_/b_a-1-re-14.jpg",
     discount: 25,
 };
 
@@ -36,7 +36,7 @@ export default function BookPreview({ book = tempBook, className }: IBookPreview
         >
             <div className="py-1 h-44 flex justify-center items-center relative mb-3">
                 <img
-                    src={book.bookImages}
+                    src={book.imageCover}
                     alt={book.name}
                     className="object-cover h-full w-auto group-hover:scale-110 ease-in-out duration-500 transform"
                     loading="lazy"
@@ -47,7 +47,7 @@ export default function BookPreview({ book = tempBook, className }: IBookPreview
                     </div>
                 )}
             </div>
-            <abbr title={book.title} className=" font-semibold text-base truncate-two-lines">
+            <abbr title={book.title} className=" min-h-[46px] font-semibold text-base truncate-two-lines">
                 {book.title}
             </abbr>
             <div className="font-semibold text-base leading-4 text-red-700 py-2 relative">

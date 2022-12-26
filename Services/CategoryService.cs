@@ -48,7 +48,7 @@ public class CategoryService : ICategoryService
 
 
         var listBookByCategory = _context.Books.Where(b => b.CategoryId != null && categories.Contains(b.Category!))
-                                                .Select(b => new { Id = b.Id, Alias = b.Alias, Author = b.Author, Price = b.Price, Episode = b.Episode, Title = b.Title, Name = b.Name, BookImages = b.BookImages, Discount = b.Discount, })
+                                                .Select(b => new { Id = b.Id, Alias = b.Alias, Author = b.Author, Price = b.Price, Episode = b.Episode, Title = b.Title, Name = b.Name, ImageCover = b.ImageCover, Discount = b.Discount, })
                                                 .ToList();
         return listBookByCategory;
 

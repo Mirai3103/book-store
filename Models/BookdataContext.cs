@@ -19,12 +19,13 @@ public partial class BookdataContext : DbContext
 
     public virtual DbSet<Billdetail> Billdetails { get; set; } = null!;
 
-
     public virtual DbSet<Book> Books { get; set; } = null!;
 
     public virtual DbSet<Cartdetail> Cartdetails { get; set; } = null!;
 
     public virtual DbSet<Category> Categories { get; set; } = null!;
+
+    public virtual DbSet<Image> Images { get; set; } = null!;
 
     public virtual DbSet<Promocode> Promocodes { get; set; } = null!;
 
@@ -41,7 +42,12 @@ public partial class BookdataContext : DbContext
     public virtual DbSet<Userpayment> Userpayments { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseMySql("server=localhost;port=3306;database=bookdata;uid=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.30-mysql"));
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder.UseMySql("server=localhost;port=3306;database=bookdata;uid=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.30-mysql"));
+        }
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -124,9 +130,6 @@ public partial class BookdataContext : DbContext
             entity.Property(e => e.BookCoverType)
                 .HasColumnType("enum('Bìa Cứng','Bìa Mềm','Ebook')")
                 .HasColumnName("bookCoverType");
-            entity.Property(e => e.BookImages)
-                .HasMaxLength(255)
-                .HasColumnName("bookImages");
             entity.Property(e => e.CategoryId).HasColumnName("categoryId");
             entity.Property(e => e.CreatedAt)
                 .HasMaxLength(6)
@@ -147,6 +150,9 @@ public partial class BookdataContext : DbContext
             entity.Property(e => e.Grade)
                 .HasMaxLength(255)
                 .HasColumnName("grade");
+            entity.Property(e => e.ImageCover)
+                .HasMaxLength(255)
+                .HasColumnName("imageCover");
             entity.Property(e => e.Language)
                 .HasMaxLength(255)
                 .HasColumnName("language");
@@ -243,6 +249,24 @@ public partial class BookdataContext : DbContext
             entity.HasOne(d => d.Parent).WithMany(p => p.InverseParent)
                 .HasForeignKey(d => d.ParentId)
                 .HasConstraintName("category_ibfk_1");
+        });
+
+        modelBuilder.Entity<Image>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("image");
+
+            entity.HasIndex(e => e.BookId, "BookId");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Url)
+                .HasMaxLength(255)
+                .HasColumnName("url");
+
+            entity.HasOne(d => d.Book).WithMany(p => p.Images)
+                .HasForeignKey(d => d.BookId)
+                .HasConstraintName("image_ibfk_1");
         });
 
         modelBuilder.Entity<Promocode>(entity =>

@@ -3,7 +3,7 @@ export interface IBookPreview {
     alias: string;
     name: string;
     title: string;
-    bookImages: string;
+    imageCover: string;
     episode?: string;
     discount: number;
     price: number;
@@ -31,6 +31,7 @@ export interface IBook extends IBookPreview {
     provider: IProvider;
     publisher: IProvider;
     category: ICategory;
+    images: IImage[];
 }
 
 export interface IProvider {
@@ -75,4 +76,10 @@ export interface ISeries {
     };
     publisher: IPublisher;
     numberOfFollowers: number;
+}
+
+export interface IImage {
+    id: number;
+    url: string;
+    bookId: number;
 }
