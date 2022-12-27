@@ -1,10 +1,7 @@
 import React from "react";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
-// BiSearch
 import { BiSearch, BiUser } from "react-icons/bi";
-//IoNotificationsOutline
 import { IoNotificationsOutline } from "react-icons/io5";
-//AiOutlineShoppingCart
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { selectBreadCrumbs, selectTitle } from "../../redux/pageStateSplice";
 import { MdNavigateNext } from "react-icons/md";
@@ -15,7 +12,6 @@ export default function Header() {
     const breadCrumbs = useAppSelector(selectBreadCrumbs);
     const title = useAppSelector(selectTitle);
     document.title = title;
-    console.log(breadCrumbs);
     return (
         <header className="w-full flex justify-between items-center py-6 px-3 border-b pl-7 ">
             <div className="flex flex-col basis-1/3 justify-start">
@@ -29,7 +25,6 @@ export default function Header() {
                             {index !== breadCrumbs.length - 1 && <MdNavigateNext className="inline-block mx-1" />}
                         </span>
                     ))}
-                    {/* <span className="text-hover-primary"> {title}</span> */}
                 </div>
             </div>
             <div className="basis-1/3 flex justify-center">

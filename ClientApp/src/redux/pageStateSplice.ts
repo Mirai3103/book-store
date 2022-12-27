@@ -31,6 +31,9 @@ export const pageStateSplice = createSlice({
         changeTitle: (state, action) => {
             state.title = action.payload;
         },
+        resetPageState: (state) => {
+            state = initialState;
+        },
     },
 });
 
@@ -39,3 +42,4 @@ export const selectTitle = (state: RootState) => state.pageState.title;
 
 export const { changeBreadCrumbs } = pageStateSplice.actions;
 export const { changeTitle } = pageStateSplice.actions;
+export const { resetPageState } = pageStateSplice.actions;
