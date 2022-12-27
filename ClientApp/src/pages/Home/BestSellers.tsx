@@ -8,14 +8,14 @@ import { Swiper, SwiperSlide, SwiperRef } from "swiper/react";
 import "swiper/css";
 import { Autoplay, Navigation } from "swiper";
 import "swiper/css/navigation";
-export default function BestSellers() {
+export default function BestSellers({ setIsLoaded }: { setIsLoaded: React.Dispatch<React.SetStateAction<boolean>> }) {
     const [books, setBooks] = React.useState<IBookPreview[]>([]);
     const [loading, setLoading] = React.useState(true);
     React.useEffect(() => {
         axios.get("/api/Book/GetAll?page=1&limit=12").then((res) => {
             setBooks(res.data);
-            console.log(res.data);
             setLoading(false);
+            setIsLoaded(true);
         });
     }, []);
     const swiperRef = React.useRef<SwiperRef>(null);

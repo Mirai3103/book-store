@@ -23,7 +23,7 @@ export function ButtonOutline({ children, className, ...props }: Props) {
             type="button"
             {...props}
             className={
-                "border-2 hoverv border-primary text-primary rounded-md px-2 py-2 hover:bg-primary-dark hover:text-white flex justify-center items-center" +
+                "border-2 hoverv border-primary text-primary rounded-md px-2 py-2 hover:bg-primary-dark hover:text-white flex justify-center items-center " +
                 className
             }
         >

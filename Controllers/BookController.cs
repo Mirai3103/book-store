@@ -29,5 +29,17 @@ namespace book_ecommerce.Controllers
             return Ok(_bookService.GetByAlias(alias!));
 
         }
+        [HttpGet(Name = "GetBooksSameSeries")]
+        public IActionResult GetBooksSameSeries([FromQuery] int bookId, [FromQuery] int limit = 8)
+        {
+            var books = _bookService.GetBooksSameSeries(bookId, limit);
+            return Ok(books);
+        }
+        [HttpGet(Name = "GetBooksSameAuthor")]
+        public IActionResult GetBooksSameAuthor([FromQuery] int bookId, [FromQuery] int limit = 8)
+        {
+            var books = _bookService.GetBooksSameAuthor(bookId, limit);
+            return Ok(books);
+        }
     }
 }

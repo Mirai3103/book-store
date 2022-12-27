@@ -9,6 +9,11 @@ public class BookService : IBookService
         _context = context;
     }
 
+    public IEnumerable<dynamic> AdvancedSearch(string keyword, int? categoryId, int? providerId, string? language, int? minPrice, int? maxPrice, int page = 1, int limit = 24)
+    {
+        throw new NotImplementedException();
+    }
+
     public IEnumerable<dynamic> GetAll(int page = 1, int limit = 50)
     {
         var skip = (page - 1) * limit;
@@ -59,6 +64,30 @@ public class BookService : IBookService
         return book;
 
     }
+
+    public IEnumerable<dynamic> GetBooksSameAuthor(int bookId, int limit = 8)
+    {
+        var book = _context.Books.Where(b => b.Id == bookId).FirstOrDefault();
+        if (book == null)
+        {
+            throw new HttpResponseException(HttpStatusCode.NotFound, "Book not found");
+        }
+        var books = _context.Books.Where(b => b.DeletedAt == null && b.Author == book.Author && b.Id != bookId).Select(b => new { Id = b.Id, Alias = b.Alias, Author = b.Author, Price = b.Price, Episode = b.Episode, Title = b.Title, Name = b.Name, ImageCover = b.ImageCover, Discount = b.Discount, }).Take(limit).ToList();
+        return books;
+    }
+
+    public IEnumerable<dynamic> GetBooksSameSeries(int bookId, int limit = 8)
+    {
+        var book = _context.Books.Where(b => b.Id == bookId).FirstOrDefault();
+        if (book == null)
+        {
+            throw new HttpResponseException(HttpStatusCode.NotFound, "Book not found");
+        }
+        var books = _context.Books.Where(b => b.DeletedAt == null && b.SeriesId == book.SeriesId && b.Id != bookId).Select(b => new { Id = b.Id, Alias = b.Alias, Author = b.Author, Price = b.Price, Episode = b.Episode, Title = b.Title, Name = b.Name, ImageCover = b.ImageCover, Discount = b.Discount, }).Take(limit).ToList();
+        return books;
+    }
+
+
 
     public Book GetByAlias(string alias)
     {

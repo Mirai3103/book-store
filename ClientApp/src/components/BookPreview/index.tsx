@@ -4,23 +4,11 @@ import Rating from "@mui/material/Rating";
 import { toMoneyStringFormat } from "../../utils/helper";
 import { useNavigate } from "react-router-dom";
 interface IBookPreviewProps {
-    book?: IBookPreview;
+    book: IBookPreview;
     className?: string;
 }
 
-const tempBook: IBookPreview = {
-    id: 1,
-    alias: "re-zero-bat-dau-lai-o-the-gioi-khac-14-tang-kem-bookmark-pvc-in-mau",
-    author: "Tappei Nagatsuki",
-    price: 120000,
-    episode: "Tập 14",
-    title: "Re:zero - Bắt Đầu Lại Ở Thế Giới Khác 14 - Tặng Kèm Bookmark PVC In Màu",
-    name: "Re:zero - Bắt Đầu Lại Ở Thế Giới Khác 14",
-    imageCover: "https://cdn0.fahasa.com/media/catalog/product/b/_/b_a-1-re-14.jpg",
-    discount: 25,
-};
-
-export default function BookPreview({ book = tempBook, className }: IBookPreviewProps) {
+export default function BookPreview({ book, className }: IBookPreviewProps) {
     const finalPrice = book.price - (book.price * book.discount) / 100;
     const navigate = useNavigate();
     const handleBookClick = () => {
@@ -29,8 +17,8 @@ export default function BookPreview({ book = tempBook, className }: IBookPreview
     return (
         <div
             className={
-                "flex flex-col bg-white py-3 group shadow-md my-1 hover:shadow-xl cursor-pointer px-2 " + className ??
-                "w-56"
+                "flex flex-col bg-white py-3 group shadow-md my-1 hover:shadow-xl cursor-pointer px-2 " +
+                (className ? className : "w-56")
             }
             onClick={handleBookClick}
         >

@@ -37,11 +37,10 @@ public class SeriesService : ISeriesService
 
     public IEnumerable<dynamic> GetTopSeries()
     {
-        // get top 6 series have the most books
         var topSeries = _context.Series
             .Include(s => s.Books)
             .Include(s => s.Publisher)
-            .OrderByDescending(s => s.Books.Count)
+            .OrderByDescending(s => s.NumberOfFollowers)
             .Take(6)
             .Select(s => new
             {
@@ -51,7 +50,7 @@ public class SeriesService : ISeriesService
                 Author = s.Author,
                 LastestBook = s.Books.OrderByDescending(b => b.Episode).Select(b => new { Episode = b.Episode, Image = b.ImageCover }).FirstOrDefault(),
                 Publisher = new { Id = s.Publisher != null ? s.Publisher.Id : 0, Name = s.Publisher != null ? s.Publisher.Name : "" },
-                NumberOfFollowers = s.NumberOfFollowers == 0 ? (int)(new Random().NextDouble() * 100000) : s.NumberOfFollowers,
+                NumberOfFollowers = s.NumberOfFollowers,
                 UpdatedAt = s.UpdatedAt,
             }
                ).ToList();
