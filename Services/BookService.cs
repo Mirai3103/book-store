@@ -21,9 +21,12 @@ public class BookService : IBookService
         {
             bookQuery = bookQuery.Where(b => query.language.Contains(b.Language));
         }
-        if (query.categoryId != null)
+        if (query.categoryId is not null)
         {
-            bookQuery = bookQuery.Where(b => query.categoryId == b.CategoryId);
+            var categories = from c in _context.Categories
+                             where c.Id == query.categoryId || c.ParentId == query.categoryId
+                             select c;
+            bookQuery = bookQuery.Where(b => b.CategoryId != null && categories.Contains(b.Category!));
         }
         if (query.providerId != null)
         {
@@ -52,11 +55,11 @@ public class BookService : IBookService
                 bookQuery = bookQuery.OrderByDescending(b => b.CreatedAt);
                 break;
         }
-
+        Console.WriteLine(@"limit: {0}, page: {1},skip: {2}", query.limit, query.page, (query.page - 1) * query.limit);
         return new
         {
             Count = bookQuery.Count(),
-            Books = bookQuery.Take(query.limit).Skip((query.page - 1) * query.limit).Select(SelectPreview).ToList()
+            Books = bookQuery.Skip((query.page - 1) * query.limit).Take(query.limit).Select(SelectPreview).ToList()
         };
     }
 

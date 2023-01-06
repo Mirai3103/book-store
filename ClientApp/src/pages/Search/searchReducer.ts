@@ -7,6 +7,18 @@ export enum SortOrder {
     Newest = 6,
     Oldest = 7,
 }
+
+export const sortOrderDisplay = [
+    { value: SortOrder.WeekBestSeller, label: "Bán chạy tuần" },
+    { value: SortOrder.MonthBestSeller, label: "Bán chạy tháng" },
+    { value: SortOrder.YearBestSeller, label: "Bán chạy năm" },
+    { value: SortOrder.PriceLowToHigh, label: "Giá thấp đến cao" },
+    { value: SortOrder.PriceHighToLow, label: "Giá cao đến thấp" },
+    { value: SortOrder.Newest, label: "Mới nhất" },
+    { value: SortOrder.Oldest, label: "Cũ nhất" },
+];
+
+export const limitOptions = [12, 24, 36, 48];
 export interface IQuery {
     page: number;
     limit: number;
@@ -61,27 +73,27 @@ export const reducer = (state: IQuery, action: { type: ActionType; payload: any 
         case ActionType.SET_PAGE:
             return { ...state, page: action.payload };
         case ActionType.SET_LIMIT:
-            return { ...state, limit: action.payload };
+            return { ...state, limit: action.payload, page: 1 };
         case ActionType.SET_SEARCH:
-            return { ...state, search: action.payload };
+            return { ...state, search: action.payload, page: 1 };
         case ActionType.SET_CATEGORY_ID:
-            return { ...state, categoryId: action.payload };
+            return { ...state, categoryId: action.payload, page: 1 };
         case ActionType.SET_PRICE:
-            return { ...state, price: action.payload };
+            return { ...state, price: action.payload, page: 1 };
         case ActionType.SET_PROVIDER_ID:
-            return { ...state, providerId: action.payload };
+            return { ...state, providerId: action.payload, page: 1 };
         case ActionType.SET_SORT_BY:
-            return { ...state, sortBy: action.payload };
+            return { ...state, sortBy: action.payload, page: 1 };
         case ActionType.SET_AGE_GROUP:
-            return { ...state, ageGroup: action.payload };
+            return { ...state, ageGroup: action.payload, page: 1 };
         case ActionType.SET_LEVEL:
-            return { ...state, level: action.payload };
+            return { ...state, level: action.payload, page: 1 };
         case ActionType.SET_GRADE:
-            return { ...state, grade: action.payload };
+            return { ...state, grade: action.payload, page: 1 };
         case ActionType.SET_LANGUAGE:
-            return { ...state, language: action.payload };
+            return { ...state, language: action.payload, page: 1 };
         case ActionType.SET_BOOK_COVER_TYPE:
-            return { ...state, bookCoverType: action.payload };
+            return { ...state, bookCoverType: action.payload, page: 1 };
         default:
             return state;
     }
