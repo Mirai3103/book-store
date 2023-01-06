@@ -10,7 +10,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         setIsLoaded(false);
         setTimeout(() => {
             window.scrollTo(0, 0);
-
             setIsLoaded(true);
         }, 1000);
     }, [reactLocation.pathname]);

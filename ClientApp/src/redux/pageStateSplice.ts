@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import store, { RootState } from "./store";
 
-interface BreadCrumb {
+export interface BreadCrumb {
     name: string;
     path: string;
+    fullName?: string;
 }
 
 export interface PageState {
@@ -32,7 +33,8 @@ export const pageStateSplice = createSlice({
             state.title = action.payload;
         },
         resetPageState: (state) => {
-            state = initialState;
+            state.title = initialState.title;
+            state.breadCrumbs = initialState.breadCrumbs;
         },
     },
 });

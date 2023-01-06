@@ -22,14 +22,12 @@ function RelatedBook(props: IProps) {
                 setCurrentTab("series");
                 setSameAuthor(null);
             } else setSameAuthor(res.data);
-            console.log(res.data, "sameAuthor");
         });
         axios.get("/api/Book/GetBooksSameSeries?bookId=" + props.bookId).then((res) => {
             if (res.data.length == 0) {
                 setCurrentTab("author");
                 setSameSeries(null);
             } else setSameSeries(res.data);
-            console.log(res.data, "sameSeries");
         });
     }, [props.bookId]);
 

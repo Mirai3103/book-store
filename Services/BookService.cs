@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Net;
 using book_ecommerce.Models;
 namespace book_ecommerce.Servies;
@@ -9,16 +10,67 @@ public class BookService : IBookService
         _context = context;
     }
 
-    public IEnumerable<dynamic> AdvancedSearch(string keyword, int? categoryId, int? providerId, string? language, int? minPrice, int? maxPrice, int page = 1, int limit = 24)
+    public dynamic AdvancedSearch(Query query)
     {
-        throw new NotImplementedException();
+        var bookQuery = _context.Books.Where(b => b.DeletedAt == null);
+        if (query.search != null)
+        {
+            bookQuery = bookQuery.Where(b => b.Title.Contains(query.search));
+        }
+        if (query.language != null)
+        {
+            bookQuery = bookQuery.Where(b => query.language.Contains(b.Language));
+        }
+        if (query.categoryId != null)
+        {
+            bookQuery = bookQuery.Where(b => query.categoryId == b.CategoryId);
+        }
+        if (query.providerId != null)
+        {
+            bookQuery = bookQuery.Where(b => query.providerId.ToList().Contains(b.ProviderId ?? 0));
+        }
+
+        if (query.price is not null)
+        {
+            bookQuery = bookQuery.Where(b => b.Price >= query.price.min && b.Price <= query.price.max);
+        }
+        switch (query.sortBy)
+        {
+            case SortOrder.Newest:
+                bookQuery = bookQuery.OrderByDescending(b => b.CreatedAt);
+                break;
+            case SortOrder.Oldest:
+                bookQuery = bookQuery.OrderBy(b => b.CreatedAt);
+                break;
+            case SortOrder.PriceHighToLow:
+                bookQuery = bookQuery.OrderByDescending(b => b.Price);
+                break;
+            case SortOrder.PriceLowToHigh:
+                bookQuery = bookQuery.OrderBy(b => b.Price);
+                break;
+            default:
+                bookQuery = bookQuery.OrderByDescending(b => b.CreatedAt);
+                break;
+        }
+
+        return new
+        {
+            Count = bookQuery.Count(),
+            Books = bookQuery.Take(query.limit).Skip((query.page - 1) * query.limit).Select(SelectPreview).ToList()
+        };
     }
+
 
     public IEnumerable<dynamic> GetAll(int page = 1, int limit = 50)
     {
         var skip = (page - 1) * limit;
-        var books = _context.Books.Where(b => b.DeletedAt == null).Select(b => new { Id = b.Id, Alias = b.Alias, Author = b.Author, Price = b.Price, Episode = b.Episode, Title = b.Title, Name = b.Name, ImageCover = b.ImageCover, Discount = b.Discount, }).Skip(skip).Take(limit).ToList();
+        var books = _context.Books.Where(b => b.DeletedAt == null).Select(SelectPreview).Skip(skip).Take(limit).ToList();
         return books;
+    }
+
+    public IEnumerable<string> GetAllLanguage()
+    {
+        return _context.Books.Where(b => b.Language != null).Select(b => b.Language!).Distinct().ToList();
     }
 
     public Book GetBookDetail(int id)
@@ -72,7 +124,7 @@ public class BookService : IBookService
         {
             throw new HttpResponseException(HttpStatusCode.NotFound, "Book not found");
         }
-        var books = _context.Books.Where(b => b.DeletedAt == null && b.Author == book.Author && b.Id != bookId).Select(b => new { Id = b.Id, Alias = b.Alias, Author = b.Author, Price = b.Price, Episode = b.Episode, Title = b.Title, Name = b.Name, ImageCover = b.ImageCover, Discount = b.Discount, }).Take(limit).ToList();
+        var books = _context.Books.Where(b => b.DeletedAt == null && b.Author == book.Author && b.Id != bookId).Select(SelectPreview).Take(limit).ToList();
         return books;
     }
 
@@ -83,10 +135,13 @@ public class BookService : IBookService
         {
             throw new HttpResponseException(HttpStatusCode.NotFound, "Book not found");
         }
-        var books = _context.Books.Where(b => b.DeletedAt == null && b.SeriesId == book.SeriesId && b.Id != bookId).Select(b => new { Id = b.Id, Alias = b.Alias, Author = b.Author, Price = b.Price, Episode = b.Episode, Title = b.Title, Name = b.Name, ImageCover = b.ImageCover, Discount = b.Discount, }).Take(limit).ToList();
+        var books = _context.Books.Where(b => b.DeletedAt == null && b.SeriesId == book.SeriesId && b.Id != bookId).Select(SelectPreview).Take(limit).ToList();
         return books;
     }
-
+    public dynamic SelectPreview(Book b)
+    {
+        return new { Id = b.Id, Alias = b.Alias, Author = b.Author, Price = b.Price, Episode = b.Episode, Title = b.Title, Name = b.Name, ImageCover = b.ImageCover, Discount = b.Discount, };
+    }
 
 
     public Book GetByAlias(string alias)
@@ -138,7 +193,7 @@ public class BookService : IBookService
 
     public IEnumerable<dynamic> SearchByName(string name)
     {
-        var books = _context.Books.Where(b => b.DeletedAt == null && (b.Name.Contains(name) || b.Title.Contains(name))).Select(b => new { Id = b.Id, Alias = b.Alias, Author = b.Author, Price = b.Price, Episode = b.Episode, Title = b.Title, Name = b.Name, ImageCover = b.ImageCover, Discount = b.Discount, }).ToList();
+        var books = _context.Books.Where(b => b.DeletedAt == null && (b.Name.Contains(name) || b.Title.Contains(name))).Select(SelectPreview).ToList();
         return books;
     }
 }

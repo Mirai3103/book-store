@@ -5,6 +5,9 @@ import LoadingScreen from "../components/LoadingScreen";
 import Page404 from "../pages/Page404";
 import Layout from "../components/Layout";
 import BookDetail from "../pages/BookDetail/index";
+import FilterBook from "../pages/Search/FilterBook";
+import Search from "../pages/Search";
+
 const routes: RouteObject[] = [
     {
         path: "/",
@@ -23,6 +26,14 @@ const routes: RouteObject[] = [
         element: (
             <Layout>
                 <BookDetail />
+            </Layout>
+        ),
+    },
+    {
+        path: "/search",
+        element: (
+            <Layout>
+                <Search />
             </Layout>
         ),
     },

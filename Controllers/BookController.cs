@@ -41,5 +41,17 @@ namespace book_ecommerce.Controllers
             var books = _bookService.GetBooksSameAuthor(bookId, limit);
             return Ok(books);
         }
+        [HttpGet(Name = "GetListLanguage")]
+        public IActionResult GetListLanguage()
+        {
+            var languages = _bookService.GetAllLanguage();
+            return Ok(languages);
+        }
+        [HttpPost(Name = "AdvancedSearch")]
+        public IActionResult AdvancedSearch([FromBody] Query query)
+        {
+            var books = _bookService.AdvancedSearch(query);
+            return Ok(books);
+        }
     }
 }

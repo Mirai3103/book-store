@@ -9,7 +9,7 @@ import BookFullDetail from "./BookFullDetail";
 import LoadingScreen from "../../components/LoadingScreen";
 import RelatedBook from "./RelatedBook";
 import { useAppDispatch } from "../../redux/hooks";
-import { changeBreadCrumbs, changeTitle } from "../../redux/pageStateSplice";
+import { BreadCrumb, changeBreadCrumbs, changeTitle } from "../../redux/pageStateSplice";
 
 function createBreadcrumb(book: IBook | null) {
     if (!book) {
@@ -21,7 +21,7 @@ function createBreadcrumb(book: IBook | null) {
             title: "Thông tin sách",
         };
     }
-    const breadcrumb = [
+    const breadcrumb: BreadCrumb[] = [
         {
             name: "Home",
             path: "/",
@@ -38,8 +38,9 @@ function createBreadcrumb(book: IBook | null) {
         path: "/category/" + book.category.id,
     });
     breadcrumb.push({
-        name: book.title.length > 20 ? book.title.substring(0, 20) + "..." : book.title,
+        name: book.title.length > 30 ? book.title.substring(0, 30) + "..." : book.title,
         path: "/book/" + book.alias,
+        fullName: book.title,
     });
     const title = book.title;
     return { breadcrumb, title };

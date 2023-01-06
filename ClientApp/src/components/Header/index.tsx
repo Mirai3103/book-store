@@ -18,12 +18,18 @@ export default function Header() {
                 <Logo />
                 <div className="text-sm leading-6 text-[#777D74] ml-6">
                     {breadCrumbs.map((crumb, index) => (
-                        <span key={index}>
-                            <Link className={"cursor-pointer hover:underline"} to={crumb.path}>
+                        <abbr title={crumb.fullName ?? crumb.name} key={index}>
+                            <Link
+                                className={
+                                    "cursor-pointer hover:underline " +
+                                    (index === breadCrumbs.length - 1 ? "text-primary font-semibold" : "")
+                                }
+                                to={crumb.path}
+                            >
                                 {crumb.name}
                             </Link>
                             {index !== breadCrumbs.length - 1 && <MdNavigateNext className="inline-block mx-1" />}
-                        </span>
+                        </abbr>
                     ))}
                 </div>
             </div>

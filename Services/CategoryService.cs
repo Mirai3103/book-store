@@ -29,7 +29,7 @@ public class CategoryService : ICategoryService
                                         {
                                             Id = parentCategory.Id,
                                             Name = parentCategory.Name,
-                                            ChildCategory = childCategories.Select(c => new
+                                            childCategories = childCategories.Select(c => new
                                             {
                                                 Id = c.Id,
                                                 Name = c.Name,

@@ -11,6 +11,7 @@ builder.Services.AddDbContext<BookdataContext>(options => options.UseMySql(conne
 builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<IBookService, BookService>();
 builder.Services.AddTransient<ISeriesService, SeriesService>();
+builder.Services.AddTransient<IProviderService, book_ecommerce.Servies.ProviderSerice>();
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
