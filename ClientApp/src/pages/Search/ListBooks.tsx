@@ -33,9 +33,17 @@ export default function FilterBook({ dispatchQuery, currentQuery, ...props }: Pr
     const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
         dispatchQuery({ type: ActionType.SET_PAGE, payload: value });
     };
-    console.log(books);
     React.useEffect(() => {
-        axios.post("/api/Book/AdvancedSearch", currentQuery).then((res) => {
+        const data: IQuery = {
+            ...currentQuery,
+        };
+        if (currentQuery.price) {
+            data.price = {
+                min: currentQuery.price.min * 1000,
+                max: currentQuery.price.max * 1000,
+            };
+        }
+        axios.post("/api/Book/AdvancedSearch", data).then((res) => {
             setBooks(res.data.books);
             setPageCount(Math.ceil(res.data.count / currentQuery.limit));
         });
@@ -74,14 +82,15 @@ export default function FilterBook({ dispatchQuery, currentQuery, ...props }: Pr
                     </div>
                 </div>
             </div>
+
             <div
-                className={`flex w-full gap-x-1 justify-evenly grow flex-wrap ${
+                className={`flex w-full gap-x-1 justify-evenly flex-wrap ${
                     books ? "" : "items-center justify-center"
                 } `}
             >
                 {books ? books.map((book) => <BookPreview key={book.id} book={book} />) : <Loading />}
             </div>
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center mt-6 items-center">
                 <Pagination count={pageCount} color="primary" page={currentQuery.page} onChange={handleChangePage} />
             </div>
         </div>

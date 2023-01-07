@@ -27,7 +27,7 @@ public class Query
     }
     public int page { get; set; }
     public int limit { get; set; }
-    public string? search { get; set; }
+    public string? keyword { get; set; }
     public int? categoryId { get; set; }
     public PriceRange? price { get; set; }
     public int[]? providerId { get; set; }

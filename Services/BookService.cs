@@ -13,9 +13,10 @@ public class BookService : IBookService
     public dynamic AdvancedSearch(Query query)
     {
         var bookQuery = _context.Books.Where(b => b.DeletedAt == null);
-        if (query.search != null)
+        Console.WriteLine(@"query.keyword: {0}", query.keyword);
+        if (query.keyword != null)
         {
-            bookQuery = bookQuery.Where(b => b.Title.Contains(query.search));
+            bookQuery = bookQuery.Where(b => b.Title.Contains(query.keyword));
         }
         if (query.language != null)
         {

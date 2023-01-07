@@ -17,7 +17,7 @@ export default function BookPreview({ book, className }: IBookPreviewProps) {
     return (
         <div
             className={
-                "flex flex-col bg-white py-3 group shadow-md my-1 hover:shadow-xl cursor-pointer px-2 " +
+                "flex flex-col bg-white grow-0 py-3 group shadow-md my-1 hover:shadow-xl cursor-pointer px-2 " +
                 (className ? className : "w-56")
             }
             onClick={handleBookClick}
