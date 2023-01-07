@@ -3,18 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "book ecommerce", "book ecommerce.csproj", "{DEFB279B-0F7B-4E8D-9C62-4AE79B58A763}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "book ecommerce", "book ecommerce.csproj", "{DEFB279B-0F7B-4E8D-9C62-4AE79B58A763}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+		WithClient|Any CPU = WithClient|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{DEFB279B-0F7B-4E8D-9C62-4AE79B58A763}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DEFB279B-0F7B-4E8D-9C62-4AE79B58A763}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DEFB279B-0F7B-4E8D-9C62-4AE79B58A763}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DEFB279B-0F7B-4E8D-9C62-4AE79B58A763}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEFB279B-0F7B-4E8D-9C62-4AE79B58A763}.WithClient|Any CPU.ActiveCfg = WithClient|Any CPU
+		{DEFB279B-0F7B-4E8D-9C62-4AE79B58A763}.WithClient|Any CPU.Build.0 = WithClient|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
