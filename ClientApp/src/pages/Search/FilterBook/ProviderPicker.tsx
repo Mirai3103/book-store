@@ -1,5 +1,5 @@
 import React from "react";
-import { ActionType } from "../searchReducer";
+import { ActionType } from "../../../hooks/useSearchBook";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { selectProviders, setProviders } from "../../../redux/queryPickerSplice";
 import axios from "axios";

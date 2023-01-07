@@ -169,7 +169,7 @@ const searchParamsHandlers = {
 export default function useSearchBook() {
     const [query, dispatchQuery] = React.useReducer(reducer, defaultQuery);
     const [searchParams, setSearchParams] = useSearchParams();
-
+    // const debouncedSearchParams = useDebounce(searchParams, 1000);
     useEffect(() => {
         console.log("searchParams", searchParams);
         for (const [key, value] of searchParams) {
@@ -201,7 +201,9 @@ export default function useSearchBook() {
         }
         setSearchParams(searchParams, { replace: true });
     }, [JSON.stringify(query)]);
-    console.log("render");
     console.log("query", query);
     return { query, dispatchQuery };
+}
+function useDebounce(searchParams: URLSearchParams, arg1: number) {
+    throw new Error("Function not implemented.");
 }

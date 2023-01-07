@@ -1,5 +1,5 @@
 import React from "react";
-import { ActionType, IQuery } from "../searchReducer";
+import { ActionType, IQuery } from "../../../hooks/useSearchBook";
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
 import { selectCategories, setCategories } from "../../../redux/queryPickerSplice";
 import axios from "axios";

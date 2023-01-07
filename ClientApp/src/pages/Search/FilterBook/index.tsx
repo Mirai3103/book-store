@@ -1,5 +1,5 @@
 import React from "react";
-import { ActionType, IQuery } from "../searchReducer";
+import { ActionType, IQuery } from "../../../hooks/useSearchBook";
 import CategoryPicker from "./CategoryPicker";
 import PricePicker from "./PricePicker";
 import Language from "./Language";

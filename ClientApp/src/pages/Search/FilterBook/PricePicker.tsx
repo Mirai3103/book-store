@@ -1,5 +1,5 @@
 import React from "react";
-import { ActionType } from "../searchReducer";
+import { ActionType } from "../../../hooks/useSearchBook";
 import { Slider, styled } from "@mui/material";
 import Button from "../../../components/Button";
 
