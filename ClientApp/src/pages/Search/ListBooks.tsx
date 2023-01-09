@@ -1,7 +1,7 @@
 import React from "react";
-import { ActionType, IQuery, SortOrder } from "./searchReducer";
+import { ActionType, IQuery, SortOrder } from "../../hooks/useSearchBook";
 import { InputLabel, MenuItem, Pagination, Select, SelectChangeEvent, styled } from "@mui/material";
-import { sortOrderDisplay, limitOptions } from "./searchReducer";
+import { sortOrderDisplay, limitOptions } from "../../hooks/useSearchBook";
 import { IBookPreview } from "../../types/ServerEntity";
 import Loading from "../../components/Loading";
 import axios from "axios";
