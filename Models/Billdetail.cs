@@ -2,16 +2,20 @@
 using System.Collections.Generic;
 
 namespace book_ecommerce.Models;
+using System.ComponentModel.DataAnnotations;
+
 
 public partial class Billdetail
 {
     public int BillId { get; set; }
+    [Required]
 
     public int BookId { get; set; }
+    [Required]
 
-    public int? Quantity { get; set; }
+    public uint Quantity { get; set; }
 
-    public decimal? Price { get; set; }
+    public decimal Price { get; set; }
 
     public virtual Bill Bill { get; set; } = null!;
 

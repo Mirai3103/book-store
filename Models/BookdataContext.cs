@@ -65,7 +65,7 @@ public partial class BookdataContext : DbContext
 
             entity.HasIndex(e => e.UserId, "UserId");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
             entity.Property(e => e.DeletedAt).HasColumnType("datetime");
             entity.Property(e => e.IsPaid).HasColumnType("bit(1)");
@@ -259,7 +259,7 @@ public partial class BookdataContext : DbContext
 
             entity.HasIndex(e => e.BookId, "BookId");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Url)
                 .HasMaxLength(255)
                 .HasColumnName("url");
@@ -275,7 +275,7 @@ public partial class BookdataContext : DbContext
 
             entity.ToTable("promocode");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Code).HasMaxLength(255);
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
             entity.Property(e => e.DeletedAt).HasColumnType("datetime");
@@ -329,7 +329,7 @@ public partial class BookdataContext : DbContext
 
             entity.HasIndex(e => e.UserId, "UserId");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Content).HasMaxLength(255);
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
             entity.Property(e => e.DeletedAt).HasColumnType("datetime");
@@ -383,7 +383,7 @@ public partial class BookdataContext : DbContext
 
             entity.ToTable("user");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
             entity.Property(e => e.DeletedAt).HasColumnType("datetime");
             entity.Property(e => e.Email).HasMaxLength(255);
@@ -419,7 +419,7 @@ public partial class BookdataContext : DbContext
 
             entity.ToTable("userpayment");
 
-            entity.Property(e => e.UserId).ValueGeneratedNever();
+            entity.Property(e => e.UserId).ValueGeneratedOnAdd();
             entity.Property(e => e.CardCvv)
                 .HasMaxLength(255)
                 .HasColumnName("CardCVV");

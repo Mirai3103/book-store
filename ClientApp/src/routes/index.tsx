@@ -75,7 +75,7 @@ const routes = createBrowserRouter([
                 path: "",
                 children: [
                     {
-                        path: "/",
+                        path: "",
                         element: <Home />,
                     },
                     {
@@ -90,11 +90,15 @@ const routes = createBrowserRouter([
             },
             {
                 element: <AdminLayout />,
-                path: "/admin",
+                path: "admin",
                 children: [
                     {
-                        path: "/admin",
+                        path: "",
                         element: <h1>Test</h1>,
+                    },
+                    {
+                        path: "hehe",
+                        element: <h1>Testhehe</h1>,
                     },
                 ],
             },

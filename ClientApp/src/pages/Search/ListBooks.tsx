@@ -51,6 +51,7 @@ export default function FilterBook({ dispatchQuery, currentQuery, ...props }: Pr
             setBooks(null);
         };
     }, [currentQuery]);
+
     return (
         <div
             {...props}
@@ -61,9 +62,9 @@ export default function FilterBook({ dispatchQuery, currentQuery, ...props }: Pr
                     <span>Sắp xếp theo</span>
                     <div>
                         <SmallerSelect value={currentQuery.sortBy} onChange={handleChangeOrderBy}>
-                            {sortOrderDisplay.map((v, i) => (
-                                <MenuItem key={v.value} value={v.value}>
-                                    {v.label}
+                            {sortOrderDisplay.map((orderType, i) => (
+                                <MenuItem key={orderType.value} value={orderType.value}>
+                                    {orderType.label}
                                 </MenuItem>
                             ))}
                         </SmallerSelect>
@@ -88,7 +89,17 @@ export default function FilterBook({ dispatchQuery, currentQuery, ...props }: Pr
                     books ? "" : "items-center justify-center"
                 } `}
             >
-                {books ? books.map((book) => <BookPreview key={book.id} book={book} />) : <Loading />}
+                {books ? (
+                    books.length == 0 ? (
+                        <div className="bg-yellow-100 text-green-600 mt-10 p-2 text-xl font-semibold border-red-300 border">
+                            Không có sản phẩm phù hợp với từ khóa tìm kiếm của bạn.
+                        </div>
+                    ) : (
+                        books.map((book) => <BookPreview key={book.id} book={book} />)
+                    )
+                ) : (
+                    <Loading />
+                )}
             </div>
             <div className="flex justify-center mt-6 items-center">
                 <Pagination count={pageCount} color="primary" page={currentQuery.page} onChange={handleChangePage} />

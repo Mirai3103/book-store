@@ -2,7 +2,7 @@
 
 using book_ecommerce.Models;
 using Microsoft.EntityFrameworkCore;
-namespace book_ecommerce.Servies;
+namespace book_ecommerce.Services;
 public class SeriesService : ISeriesService
 {
     private readonly BookdataContext _context;

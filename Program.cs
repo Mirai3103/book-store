@@ -1,37 +1,19 @@
 
-using System.Text.Json.Serialization;
-using book_ecommerce.Models;
-using Microsoft.EntityFrameworkCore;
-using book_ecommerce.Servies;
 
-var builder = WebApplication.CreateBuilder(args);
-// Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<BookdataContext>(options => options.UseMySql(connectionString, ServerVersion.Parse("8.0.30-mysql")));
-builder.Services.AddTransient<ICategoryService, CategoryService>();
-builder.Services.AddTransient<IBookService, BookService>();
-builder.Services.AddTransient<ISeriesService, SeriesService>();
-builder.Services.AddTransient<IProviderService, book_ecommerce.Servies.ProviderSerice>();
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-});
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+Host.CreateDefaultBuilder(args)
+    .ConfigureWebHostDefaults(webBuilder =>
+    {
+        webBuilder.UseStartup<Startup>();
+    })
+    .Build()
+    .Run();
+// var builder = WebApplication.CreateBuilder(args);
+// var startup = new Startup(builder.Configuration);
 
+// startup.ConfigureServices(builder.Services);
 
-var app = builder.Build();
-app.UseHttpLogging();
-// app.UseRouting();
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-app.UseExceptionHandler("/error");
+// var app = builder.Build();
 
+// startup.Configure(app, app.Environment);
 
-// path to api
-app.MapControllers();
-app.Run();
+// app.Run();

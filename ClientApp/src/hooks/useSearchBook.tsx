@@ -69,6 +69,7 @@ export enum ActionType {
     SET_GRADE,
     SET_LANGUAGE,
     SET_BOOK_COVER_TYPE,
+    CLEAR_ALL,
 }
 
 export const reducer = (state: IQuery, action: { type: ActionType; payload: any }) => {
@@ -99,6 +100,8 @@ export const reducer = (state: IQuery, action: { type: ActionType; payload: any 
             return { ...state, language: data, page: 1 };
         case ActionType.SET_BOOK_COVER_TYPE:
             return { ...state, bookCoverType: action.payload, page: 1 };
+        case ActionType.CLEAR_ALL:
+            return { ...defaultQuery };
         default:
             return state;
     }
@@ -169,9 +172,7 @@ const searchParamsHandlers = {
 export default function useSearchBook() {
     const [query, dispatchQuery] = React.useReducer(reducer, defaultQuery);
     const [searchParams, setSearchParams] = useSearchParams();
-    // const debouncedSearchParams = useDebounce(searchParams, 1000);
     useEffect(() => {
-        console.log("searchParams", searchParams);
         for (const [key, value] of searchParams) {
             const handler = (searchParamsHandlers as any)[key];
             const isChange = handler && handler.getOldValue(query) !== value;
@@ -181,7 +182,11 @@ export default function useSearchBook() {
         }
         // ...
     }, [searchParams]);
-
+    useEffect(() => {
+        if (searchParams.get("clear") === "true") {
+            dispatchQuery({ type: ActionType.CLEAR_ALL, payload: undefined });
+        }
+    }, [searchParams.get("clear")]);
     React.useEffect(() => {
         for (const key in query) {
             if ((query as any)[key]) {
@@ -201,7 +206,6 @@ export default function useSearchBook() {
         }
         setSearchParams(searchParams, { replace: true });
     }, [JSON.stringify(query)]);
-    console.log("query", query);
     return { query, dispatchQuery };
 }
 function useDebounce(searchParams: URLSearchParams, arg1: number) {

@@ -5,13 +5,31 @@ import { IoNotificationsOutline } from "react-icons/io5";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { selectBreadCrumbs, selectTitle } from "../../redux/pageStateSplice";
 import { MdNavigateNext } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../Logo";
 
 export default function Header() {
     const breadCrumbs = useAppSelector(selectBreadCrumbs);
     const title = useAppSelector(selectTitle);
     document.title = title;
+    const [value, setValue] = React.useState("");
+    const reactLocation = useLocation();
+    React.useEffect(() => {
+        setValue("");
+    }, [reactLocation.pathname]);
+    const negative = useNavigate();
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setValue(e.target.value);
+    };
+    const handleEnterPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            handleSearchClick(null as any);
+        }
+    };
+    const handleSearchClick = (e: React.MouseEvent<HTMLInputElement>) => {
+        negative("/search?keyword=" + value + "&clear=true");
+    };
+
     return (
         <header className="w-full flex justify-between items-center py-6 px-3 border-b pl-7 ">
             <div className="flex flex-col basis-1/3 justify-start">
@@ -35,10 +53,18 @@ export default function Header() {
             </div>
             <div className="basis-1/3 flex justify-center">
                 <div className="w-96 flex bg-white text-[#8E938B]  rounded-md shadow-md items-center py-2 px-1">
-                    <span className="cursor-pointer grow-0">
+                    <input
+                        type="text"
+                        name=""
+                        id=""
+                        className="outline-none w-full bg-transparent grow "
+                        value={value}
+                        onChange={handleChange}
+                        onKeyDown={handleEnterPress}
+                    />
+                    <span className="cursor-pointer grow-0 hover:bg-slate-200" onClick={handleSearchClick}>
                         <BiSearch />
                     </span>
-                    <input type="text" name="" id="" className="outline-none w-full bg-transparent grow " />
                 </div>
             </div>
             <div className="text-2xl font-semibold leading-9 flex text-[#8E938B] gap-x-6 basis-1/3 justify-end">

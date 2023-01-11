@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace book_ecommerce.Models;
 
 public partial class Review
 {
+
     public int Id { get; set; }
 
     public int? BookId { get; set; }
