@@ -6,6 +6,7 @@ import Page404 from "../pages/Page404";
 import Layout from "../components/Layout";
 import BookDetail from "../pages/BookDetail/index";
 import SearchPage from "../pages/Search";
+import TestPage from "pages/Test";
 
 // const routes2: RouteObject[] = [
 //     {
@@ -101,6 +102,10 @@ const routes = createBrowserRouter([
                         element: <h1>Testhehe</h1>,
                     },
                 ],
+            },
+            {
+                element: <TestPage />,
+                path: "test",
             },
         ],
     },

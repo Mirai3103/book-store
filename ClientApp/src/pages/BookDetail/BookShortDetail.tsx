@@ -5,6 +5,8 @@ import { toMoneyStringFormat } from "../../utils/helper";
 import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 import Button, { ButtonOutline } from "../../components/Button";
 import { BsCartPlusFill } from "react-icons/bs";
+import { useAppDispatch } from "redux/hooks";
+import { addCartItem } from "redux/cartSplice";
 
 interface IBookShortDetailProps {
     book: IBook;
@@ -38,9 +40,14 @@ export default function BookShortDetail({ book, className }: IBookShortDetailPro
         if (quantity == 1) return;
         setQuantity((oldQuantity) => oldQuantity - 1);
     };
+    const dispatch = useAppDispatch();
+
+    const handleAddToCart = () => {
+        dispatch(addCartItem({ bookId: book.id, book: book, quantity: quantity }));
+    };
     return (
         <div className="flex flex-col gap-y-3">
-            <h1 className="text-2xl font-semibold truncate-two-lines my-2">{book.name}</h1>
+            <h1 className="text-2xl font-semibold truncate-two-lines my-2">{book.title}</h1>
             <div className="flex flex-wrap gap-y-1">
                 <div className="w-1/2">
                     Nhà cung cấp:{" "}
@@ -95,7 +102,7 @@ export default function BookShortDetail({ book, className }: IBookShortDetailPro
                 <span className="text-2xl text-primary">{toMoneyStringFormat(finalPrice * quantity) + "đ"}</span>
             </div>
             <div className="flex gap-x-3">
-                <ButtonOutline className=" gap-x-3 px-4">
+                <ButtonOutline className=" gap-x-3 px-4" onClick={handleAddToCart}>
                     <BsCartPlusFill className="font-bold text-lg" />
                     <span className="font-semibold">Thêm vào giỏ hàng</span>
                 </ButtonOutline>

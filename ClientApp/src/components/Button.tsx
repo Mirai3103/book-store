@@ -1,15 +1,22 @@
 import React from "react";
+export const colors = {
+    primary: "bg-primary text-white hover:bg-primary-dark",
+    invertPrimary: "bg-white text-primary-dark hover:bg-slate-100",
+};
+interface IColorsButton {
+    [key: string]: string;
+}
+interface Props extends React.HTMLAttributes<HTMLButtonElement> {
+    classColor?: keyof IColorsButton;
+}
 
-interface Props extends React.HTMLAttributes<HTMLButtonElement> {}
-
-export default function Button({ children, className, ...props }: Props) {
+export default function Button({ children, className, classColor = colors.primary, ...props }: Props) {
     return (
         <button
             type="button"
             {...props}
             className={
-                "bg-primary text-white rounded-md px-2 py-2 hover:bg-primary-dark flex justify-center items-center " +
-                className
+                `${classColor} rounded-md px-2 py-2 flex justify-center items-center font-semibold text-lg ` + className
             }
         >
             {children}

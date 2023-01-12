@@ -1,11 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { pageStateSplice } from "./pageStateSplice";
 import { queryPickerSplice } from "./queryPickerSplice";
-
+import { cartSplice } from "./cartSplice";
 const store = configureStore({
     reducer: {
         pageState: pageStateSplice.reducer,
         queryPicker: queryPickerSplice.reducer,
+        cart: cartSplice.reducer,
     },
 });
 

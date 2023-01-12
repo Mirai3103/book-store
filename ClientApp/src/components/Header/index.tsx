@@ -5,8 +5,9 @@ import { IoNotificationsOutline } from "react-icons/io5";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { selectBreadCrumbs, selectTitle } from "../../redux/pageStateSplice";
 import { MdNavigateNext } from "react-icons/md";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import Logo from "../Logo";
+import CartIcon from "./CartIcon";
 
 export default function Header() {
     const breadCrumbs = useAppSelector(selectBreadCrumbs);
@@ -14,8 +15,17 @@ export default function Header() {
     document.title = title;
     const [value, setValue] = React.useState("");
     const reactLocation = useLocation();
+    const [params, setParams] = useSearchParams();
     React.useEffect(() => {
-        setValue("");
+        if (params.get("keyword")) {
+            setValue(params.get("keyword")!);
+        }
+    }, [params.get("keyword")]);
+
+    React.useEffect(() => {
+        if (reactLocation.pathname !== "/search") {
+            setValue("");
+        }
     }, [reactLocation.pathname]);
     const negative = useNavigate();
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +41,7 @@ export default function Header() {
     };
 
     return (
-        <header className="w-full flex justify-between items-center py-6 px-3 border-b pl-7 ">
+        <header className="w-full flex justify-between items-center py-6 px-7 border-b  ">
             <div className="flex flex-col basis-1/3 justify-start">
                 <Logo />
                 <div className="text-sm leading-6 text-[#777D74] ml-6">
@@ -67,13 +77,11 @@ export default function Header() {
                     </span>
                 </div>
             </div>
-            <div className="text-2xl font-semibold leading-9 flex text-[#8E938B] gap-x-6 basis-1/3 justify-end">
+            <div className="text-2xl font-bold leading-9 flex text-[#8E938B] gap-x-6 basis-1/3 justify-end">
                 <span className="text-hover-primary">
                     <IoNotificationsOutline />
                 </span>
-                <span className="text-hover-primary">
-                    <AiOutlineShoppingCart />
-                </span>
+                <CartIcon />
                 <span className="text-hover-primary">
                     <BiUser />
                 </span>
