@@ -26,7 +26,7 @@ export const cartSplice = createSlice({
             cartItem.isCheck = false;
             const existingCartItem = state.cartItems.find((item) => item.bookId === cartItem.bookId);
             if (existingCartItem) {
-                existingCartItem.quantity++;
+                existingCartItem.quantity += cartItem.quantity;
             } else {
                 state.cartItems.push(cartItem);
             }

@@ -7,6 +7,7 @@ import Button, { ButtonOutline } from "../../components/Button";
 import { BsCartPlusFill } from "react-icons/bs";
 import { useAppDispatch } from "redux/hooks";
 import { addCartItem } from "redux/cartSplice";
+import { createToast } from "components/Toast";
 
 interface IBookShortDetailProps {
     book: IBook;
@@ -44,6 +45,7 @@ export default function BookShortDetail({ book, className }: IBookShortDetailPro
 
     const handleAddToCart = () => {
         dispatch(addCartItem({ bookId: book.id, book: book, quantity: quantity }));
+        createToast("Thành công!", "Thêm vào giỏ hàng thành công", "success", 3000);
     };
     return (
         <div className="flex flex-col gap-y-3">

@@ -77,12 +77,12 @@ export default function Header() {
                     </span>
                 </div>
             </div>
-            <div className="text-2xl font-bold leading-9 flex text-[#8E938B] gap-x-6 basis-1/3 justify-end">
-                <span className="text-hover-primary">
+            <div className="text-2xl font-bold leading-9 flex text-[#8E938B] gap-x-4 basis-1/3 justify-end ">
+                <span className="text-hover-primary hover:bg-slate-100 p-2 rounded-md relative">
                     <IoNotificationsOutline />
                 </span>
                 <CartIcon />
-                <span className="text-hover-primary">
+                <span className="text-hover-primary hover:bg-slate-100 p-2 rounded-md relative">
                     <BiUser />
                 </span>
             </div>
