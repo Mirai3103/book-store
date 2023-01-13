@@ -5,15 +5,17 @@ import { selectCartItems } from "redux/cartSplice";
 import Popover from "components/Popover";
 import useToggle from "../../hooks/useToggle";
 import CartItemShortPreview from "components/Cart/CartItemShortPreview";
+
 function CartIcon() {
     const cartItems = useAppSelector(selectCartItems);
     const anchorRef = React.useRef<HTMLSpanElement>(null);
     const [open, toggle, setTrue, setFalse] = useToggle(false);
+
     return (
         <span
             className="text-hover-primary hover:bg-slate-100 p-2 rounded-md relative"
             ref={anchorRef}
-            onClick={toggle}
+            onClick={setTrue}
         >
             {cartItems.length > 0 && (
                 <span className="absolute top-0 right-0 w-6 h-6 rounded-full bg-primary text-white text-sm flex items-center justify-center translate-x-2/3 -translate-y-2/3 border-dashed shadow-2xl">

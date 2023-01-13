@@ -1,12 +1,17 @@
 import * as React from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { CartItem } from "redux/cartSplice";
-
+import { useAppDispatch } from "redux/hooks";
+import { removeCartItem } from "redux/cartSplice";
 interface Props {
     item: CartItem;
 }
 
 function CartItemShortPreview({ item }: Props) {
+    const dispatch = useAppDispatch();
+    const handleRemoveItem = () => {
+        dispatch(removeCartItem(item.book.id));
+    };
     return (
         <div className="flex items-start group w-full gap-x-1 px-3 cursor-pointer">
             <div className="flex justify-center items-end w-20 grow-0 shrink-0">
@@ -23,7 +28,7 @@ function CartItemShortPreview({ item }: Props) {
                 </div>
             </div>
             <div className="-mt-3 grow-0 -mr-3 shrink-0 self-center">
-                <div className="hover:bg-gray-200 text-lg rounded-full p-1 cursor-pointer">
+                <div className="hover:bg-gray-200 text-lg rounded-full p-1 cursor-pointer" onClick={handleRemoveItem}>
                     <AiOutlineClose className="text-red-500" />
                 </div>
             </div>
