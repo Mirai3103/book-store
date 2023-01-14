@@ -12,6 +12,7 @@ interface Props {
 const clip_pathStyle: React.CSSProperties = {
     clipPath: "polygon(50% 50%, 0 100%, 100% 100%)",
     zIndex: 60,
+    backgroundColor: "#02D871",
 };
 function Popover({ children, anchorEl, onClose, open }: Props) {
     if (!open) return null;

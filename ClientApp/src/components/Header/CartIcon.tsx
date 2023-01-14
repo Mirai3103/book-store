@@ -13,7 +13,7 @@ function CartIcon() {
 
     return (
         <span
-            className="text-hover-primary hover:bg-slate-100 p-2 rounded-md relative"
+            className="text-hover-primary hover:bg-slate-100 p-2 rounded-md relative flex items-center"
             ref={anchorRef}
             onClick={setTrue}
         >
@@ -25,7 +25,7 @@ function CartIcon() {
             <AiOutlineShoppingCart />
             <Popover open={open} onClose={setFalse} anchorEl={anchorRef.current}>
                 <div className="flex justify-between rounded-t-md items-center bg-primary p-2 py-4 w-full">
-                    <div className="text-white font-bold text-2xl ">Giỏ hàng</div>
+                    <div className="text-white font-bold text-xl ">Giỏ hàng</div>
                     <div className="text-black font-bold bg-white w-8 h-8 text-center rounded-md p-1 cursor-pointer">
                         {cartItems.length}
                     </div>

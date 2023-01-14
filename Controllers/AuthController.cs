@@ -17,19 +17,26 @@ namespace book_ecommerce.Controllers
         {
             _authService = authService;
         }
+        public struct LoginRequest
+        {
+            public string email { get; set; }
+            public string password { get; set; }
+        }
         [HttpPost]
         [AllowAnonymous]
-        public IActionResult Login([FromForm] string email, [FromForm] string password)
+        public IActionResult Login([FromBody] LoginRequest loginRequest)
         {
-            var (accessToken, refreshToken) = _authService.Login(email, password);
-            return Ok(new { accessToken, refreshToken });
+            var (accessToken, refreshToken, user) = _authService.Login(loginRequest.email, loginRequest.password);
+
+            return Ok(new { accessToken, refreshToken, user });
         }
+
         [HttpPost]
         [AllowAnonymous]
         public IActionResult Register([FromBody] User user)
         {
-            var (accessToken, refreshToken) = _authService.Register(user);
-            return Ok(new { accessToken, refreshToken });
+            var (accessToken, refreshToken, a) = _authService.Register(user);
+            return Ok(new { accessToken, refreshToken, user = a });
         }
         [HttpPost]
         [Authorize]
@@ -43,6 +50,17 @@ namespace book_ecommerce.Controllers
         public IActionResult GetUser()
         {
             return Ok(_authService.GetUserInfo(HttpContext.User.Identity));
+        }
+        public struct RefreshTokenRequest
+        {
+            public string refreshToken { get; set; }
+        }
+        [HttpPost]
+        [AllowAnonymous]
+        public IActionResult RefreshToken([FromBody] RefreshTokenRequest refreshToken)
+        {
+            var (accessToken, user) = _authService.RefreshToken(refreshToken.refreshToken);
+            return Ok(new { accessToken, user });
         }
     }
 }

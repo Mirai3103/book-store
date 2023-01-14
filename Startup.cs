@@ -3,10 +3,10 @@ using System.Text;
 using System.Text.Json.Serialization;
 using book_ecommerce.Models;
 using book_ecommerce.Services;
+using book_ecommerce.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-
 public class Startup
 {
     public IConfiguration Configuration { get; }
@@ -21,8 +21,10 @@ public class Startup
         services.AddTransient<ICategoryService, CategoryService>();
         services.AddTransient<IBookService, BookService>();
         services.AddTransient<ISeriesService, SeriesService>();
+        services.AddTransient<IBillService, BillService>();
         services.AddTransient<IProviderService, ProviderSerice>();
-        services.AddTransient<book_ecommerce.Services.Interface.IAuthService, book_ecommerce.Services.AuthService>();
+        services.AddTransient<IUserService, UserService>();
+        services.AddTransient<IAuthService, AuthService>();
         services.AddCors(options =>
        {
            options.AddPolicy("CorsPolicy", builder =>
@@ -32,7 +34,7 @@ public class Startup
                .AllowAnyHeader();
            });
        });
-        services.AddControllers().AddJsonOptions(options =>
+        services.AddControllers(o => o.Filters.Add<HttpResponseExceptionFilter>()).AddJsonOptions(options =>
          {
              options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
          });

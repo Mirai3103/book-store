@@ -48,7 +48,15 @@ export interface ICategory {
     name: string;
     parent: ICategory;
 }
-
+export interface IUser {
+    id: number;
+    phone: string;
+    role: number;
+    fullName: string;
+    email: string;
+    avatar: string;
+    address: string;
+}
 // {
 //     "id": 1,
 //     "name": "Re:zero - Bắt Đầu Lại Ở Thế Giới Khác",

@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using book_ecommerce.Models;
 using book_ecommerce.Services.Interface;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 namespace book_ecommerce.Services
@@ -79,7 +80,7 @@ namespace book_ecommerce.Services
                 new Claim(ClaimTypes.Email, user.Email!),
                 new Claim ("Avatar", user.Avatar!),
             };
-            var timeExpire = DateTime.Now.AddMinutes(30);
+            var timeExpire = DateTime.Now.AddMinutes(2);
             return GenerateToken(claims, timeExpire);
         }
 
@@ -95,7 +96,7 @@ namespace book_ecommerce.Services
             return user;
         }
 
-        public (string accessToken, string refreshToken) Login(string email, string password)
+        public (string accessToken, string refreshToken, dynamic user) Login(string email, string password)
         {
             var user = _context.Users.Where(u => u.Email == email).FirstOrDefault();
             if (user == null)
@@ -108,7 +109,19 @@ namespace book_ecommerce.Services
             }
             var accessToken = GenerateAccessToken(user);
             var refreshToken = GenerateRefreshToken(user);
-            return (accessToken, refreshToken);
+            user.RefreshToken = refreshToken;
+            _context.Update(user);
+            _context.SaveChanges();
+            return (accessToken, refreshToken, new
+            {
+                Id = user.Id,
+                FullName = user.FullName,
+                Email = user.Email,
+                Avatar = user.Avatar,
+                Role = user.Role,
+                Address = user.Address,
+                Phone = user.Phone,
+            });
         }
 
         public void Logout(string refreshToken)
@@ -122,7 +135,7 @@ namespace book_ecommerce.Services
             _context.SaveChanges();
 
         }
-        public (string accessToken, string refreshToken) Register(User user)
+        public (string accessToken, string refreshToken, dynamic user) Register(User user)
         {
             if (string.IsNullOrEmpty(user.Email))
             {
@@ -145,7 +158,16 @@ namespace book_ecommerce.Services
             _context.SaveChanges();
             var accessToken = GenerateAccessToken(user);
             var refreshToken = GenerateRefreshToken(user);
-            return (accessToken, refreshToken);
+            return (accessToken, refreshToken, new
+            {
+                Id = user.Id,
+                FullName = user.FullName,
+                Email = user.Email,
+                Avatar = user.Avatar,
+                Role = user.Role,
+                Address = user.Address,
+                Phone = user.Phone,
+            });
 
         }
 
@@ -173,6 +195,22 @@ namespace book_ecommerce.Services
                 throw new HttpResponseException(HttpStatusCode.Unauthorized, "Unauthorized");
             }
             return user;
+        }
+
+        public (string accessToken, dynamic user) RefreshToken(string refreshToken)
+        {
+            var user = GetUserFromRefreshToken(refreshToken);
+            var accessToken = GenerateAccessToken(user);
+            return (accessToken, new
+            {
+                Id = user.Id,
+                FullName = user.FullName,
+                Email = user.Email,
+                Avatar = user.Avatar,
+                Role = user.Role,
+                Address = user.Address,
+                Phone = user.Phone,
+            });
         }
     }
 }

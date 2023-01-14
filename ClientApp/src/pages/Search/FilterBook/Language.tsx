@@ -16,7 +16,7 @@ export default function Language({ className, dispatchQuery, currentLanguage }: 
     const languages = useAppSelector(selectLanguages);
     React.useEffect(() => {
         if (languages && languages.length > 0) return;
-        axios.get("api/Book/GetListLanguage").then((res) => {
+        axios.get("/api/Book/GetListLanguage").then((res) => {
             dispatch(setLanguages(res.data));
         });
     }, []);

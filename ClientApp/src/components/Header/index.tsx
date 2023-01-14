@@ -8,6 +8,7 @@ import { MdNavigateNext } from "react-icons/md";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import Logo from "../Logo";
 import CartIcon from "./CartIcon";
+import AuthIcon from "./AuthIcon";
 
 export default function Header() {
     const breadCrumbs = useAppSelector(selectBreadCrumbs);
@@ -78,13 +79,11 @@ export default function Header() {
                 </div>
             </div>
             <div className="text-2xl font-bold leading-9 flex text-[#8E938B] gap-x-4 basis-1/3 justify-end ">
-                <span className="text-hover-primary hover:bg-slate-100 p-2 rounded-md relative">
+                <span className="text-hover-primary hover:bg-slate-100 p-2 rounded-md relative flex items-center">
                     <IoNotificationsOutline />
                 </span>
                 <CartIcon />
-                <span className="text-hover-primary hover:bg-slate-100 p-2 rounded-md relative">
-                    <BiUser />
-                </span>
+                <AuthIcon />
             </div>
         </header>
     );

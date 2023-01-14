@@ -6,7 +6,7 @@ export default function LoadingScreen() {
     const text = "Bookstore";
     const bodyElement = document.body;
     return ReactDOM.createPortal(
-        <div className="grid w-screen h-screen  top-0 left-0 z-10 bg-white fixed">
+        <div className="grid w-screen h-screen  top-0 left-0  bg-white fixed " style={{ zIndex: 1000 }}>
             <div className="flex items-center justify-center gap-x-3">
                 <img src={LogoIcon} alt="Logo" className="w-28 h-auto animate-spin-slow" />
                 <div className="font-bold text-3xl text-primary bounce-loading">

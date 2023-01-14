@@ -37,8 +37,9 @@ export default function Toast({ title, message, type, onClose }: Props) {
     const [style, setStyle] = React.useState<React.CSSProperties>({
         transition: "all 0.6s ease-in-out",
         right: "20px",
-        transform: "translateX(100%)",
+        transform: "translateX(120%)",
         backgroundColor: toastTheme[type].bg,
+        zIndex: 102,
     });
     React.useEffect(() => {
         const t = setTimeout(() => {
@@ -50,7 +51,7 @@ export default function Toast({ title, message, type, onClose }: Props) {
         return () => clearTimeout(t);
     }, [type]);
     const El = (
-        <div className="fixed top-5 max-w-sm gap-x-5 p-4 z-50 flex rounded-md shadow-lg " style={style}>
+        <div className="fixed top-5 max-w-sm gap-x-5 p-4  flex rounded-md shadow-lg " style={style}>
             <div className="text-3xl">{toastTheme[type].icon}</div>
             <div style={{ color: toastTheme[type].color }}>
                 <div className="font-bold">{title}</div>

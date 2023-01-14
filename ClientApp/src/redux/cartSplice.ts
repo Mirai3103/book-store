@@ -1,6 +1,7 @@
-import { PayloadAction, createAction, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import store, { RootState } from "./store";
 import { IBookPreview } from "../types/ServerEntity";
+import { authInstance } from "../utils/service";
 
 export interface CartItem {
     bookId: number;
@@ -21,33 +22,8 @@ export const cartSplice = createSlice({
     name: "cart",
     initialState,
     reducers: {
-        addCartItem: (state, action: PayloadAction<CartItem>) => {
-            const cartItem = action.payload;
-            cartItem.isCheck = false;
-            const existingCartItem = state.cartItems.find((item) => item.bookId === cartItem.bookId);
-            if (existingCartItem) {
-                existingCartItem.quantity += cartItem.quantity;
-            } else {
-                state.cartItems.push(cartItem);
-            }
-        },
-        removeCartItem: (state, action: PayloadAction<number>) => {
-            const bookId = action.payload as number;
-            const existingCartItem = state.cartItems.find((item) => item.bookId === bookId);
-            if (existingCartItem) {
-                state.cartItems = state.cartItems.filter((item) => item.bookId !== bookId);
-            }
-        },
-        changeCartItemQuantity: (state, action: PayloadAction<{ bookId: number; quantity: number }>) => {
-            const { bookId, quantity } = action.payload as { bookId: number; quantity: number };
-            const existingCartItem = state.cartItems.find((item) => item.bookId === bookId);
-            if (existingCartItem) {
-                if (quantity <= 0) {
-                    state.cartItems = state.cartItems.filter((item) => item.bookId !== bookId);
-                    return;
-                }
-                existingCartItem.quantity = quantity;
-            }
+        addListCartItem: (state, action: PayloadAction<CartItem[]>) => {
+            state.cartItems = action.payload;
         },
         changeCartItemCheck: (state, action: PayloadAction<{ bookId: number; isCheck: boolean }>) => {
             const { bookId, isCheck } = action.payload as { bookId: number; isCheck: boolean };
@@ -60,18 +36,87 @@ export const cartSplice = createSlice({
             const isCheck = action.payload as boolean;
             state.cartItems.forEach((item) => (item.isCheck = isCheck));
         },
-        clearCart: (state) => {
-            state.cartItems = [];
-        },
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(addBookAsync.fulfilled, (state, action) => {
+                const cartItem = action.payload;
+                cartItem.isCheck = false;
+                const existingCartItem = state.cartItems.find((item) => item.bookId === cartItem.bookId);
+                if (existingCartItem) {
+                    existingCartItem.quantity += cartItem.quantity;
+                } else {
+                    state.cartItems.push(cartItem);
+                }
+            })
+            .addCase(addBookAsync.rejected, (state, action) => {
+                console.log(action.error);
+            })
+            .addCase(removeBookAsync.fulfilled, (state, action) => {
+                const bookId = action.payload;
+                const existingCartItem = state.cartItems.find((item) => item.bookId === bookId);
+                if (existingCartItem) {
+                    state.cartItems = state.cartItems.filter((item) => item.bookId !== bookId);
+                }
+            })
+            .addCase(removeBookAsync.rejected, (state, action) => {
+                console.log(action.error);
+            })
+            .addCase(clearCartAsync.fulfilled, (state, action) => {
+                state.cartItems = [];
+            })
+            .addCase(clearCartAsync.rejected, (state, action) => {
+                console.log(action.error);
+            });
     },
 });
 
+export const addBookAsync = createAsyncThunk("cart/addBookAsync", async (cartItem: CartItem, { getState }) => {
+    const isAuth = (getState() as any).auth.isAuthenticated;
+    if (!isAuth) {
+        return cartItem;
+    } else {
+        const res = await authInstance.post("/api/User/UpdateCart", {
+            bookId: cartItem.bookId,
+            amount: cartItem.quantity,
+        });
+    }
+    return cartItem;
+});
+export const removeBookAsync = createAsyncThunk("cart/removeBookAsync", async (bookId: number, { getState }) => {
+    const isAuth = (getState() as any).auth.isAuthenticated;
+    if (!isAuth) {
+        return bookId;
+    } else {
+        const res = await authInstance.post("/api/User/UpdateCart", {
+            bookId: bookId,
+            amount: 0,
+        });
+    }
+    return bookId;
+});
+export const clearCartAsync = createAsyncThunk("cart/clearCartAsync", async (_, { getState }) => {
+    const isAuth = (getState() as any).auth.isAuthenticated;
+    if (!isAuth) {
+        return;
+    } else {
+        const res = await authInstance.post("/api/User/ClearCart");
+    }
+});
+
+export const setQuantityAsync = createAsyncThunk("cart/setQuantityAsync", async (cartItem: CartItem, { getState }) => {
+    const isAuth = (getState() as any).auth.isAuthenticated;
+    if (!isAuth) {
+        return cartItem;
+    } else {
+        const res = await authInstance.post("/api/User/UpdateCart", {
+            bookId: cartItem.bookId,
+            amount: cartItem.quantity,
+            isSet: true,
+        });
+    }
+    return cartItem;
+});
+
 export const selectCartItems = (state: RootState) => state.cart.cartItems;
-export const {
-    addCartItem,
-    removeCartItem,
-    changeCartItemQuantity,
-    changeCartItemCheck,
-    changeAllCartItemCheck,
-    clearCart,
-} = cartSplice.actions;
+export const { changeCartItemCheck, changeAllCartItemCheck, addListCartItem } = cartSplice.actions;

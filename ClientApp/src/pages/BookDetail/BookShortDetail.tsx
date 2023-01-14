@@ -6,7 +6,7 @@ import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 import Button, { ButtonOutline } from "../../components/Button";
 import { BsCartPlusFill } from "react-icons/bs";
 import { useAppDispatch } from "redux/hooks";
-import { addCartItem } from "redux/cartSplice";
+import { addBookAsync } from "redux/cartSplice";
 import { createToast } from "components/Toast";
 
 interface IBookShortDetailProps {
@@ -44,7 +44,7 @@ export default function BookShortDetail({ book, className }: IBookShortDetailPro
     const dispatch = useAppDispatch();
 
     const handleAddToCart = () => {
-        dispatch(addCartItem({ bookId: book.id, book: book, quantity: quantity }));
+        dispatch(addBookAsync({ bookId: book.id, book: book, quantity: quantity }));
         createToast("Thành công!", "Thêm vào giỏ hàng thành công", "success", 3000);
     };
     return (
