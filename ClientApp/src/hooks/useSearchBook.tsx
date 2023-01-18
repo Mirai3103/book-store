@@ -9,6 +9,9 @@ export enum SortOrder {
     PriceHighToLow = 5,
     Newest = 6,
     Oldest = 7,
+    SockDealsDesc = 8,
+    SockDealsAsc = 9,
+    BestSellerAllTime = 10,
 }
 
 export const sortOrderDisplay = [
@@ -180,7 +183,6 @@ export default function useSearchBook() {
                 dispatchQuery({ type: handler.actionType, payload: handler.parseValue(value) });
             }
         }
-        // ...
     }, [searchParams]);
     useEffect(() => {
         if (searchParams.get("clear") === "true") {

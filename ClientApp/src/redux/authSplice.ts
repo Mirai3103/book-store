@@ -1,6 +1,8 @@
-import { PayloadAction, createAction, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAction, createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import store, { RootState } from "./store";
 import { IUser } from "types/ServerEntity";
+import { cookies } from "utils/axiosInstance";
+import { clearCartAsync } from "./cartSplice";
 
 export interface AuthState {
     isAuthenticated: boolean;
@@ -24,6 +26,8 @@ export const authSplice = createSlice({
             state.isAuthenticated = false;
             state.user = null;
             localStorage.removeItem("refreshToken");
+            cookies.remove("accessToken");
+            //dispatch(removeAllCartItem());
         },
     },
 });

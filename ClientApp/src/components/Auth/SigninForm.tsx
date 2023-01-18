@@ -4,13 +4,12 @@ import Form from "components/Form/Form";
 import Input from "components/Form/Input";
 import React from "react";
 import { Link } from "react-router-dom";
-import { login } from "utils/service";
+import { login } from "utils/axiosInstance";
 import { login as setUser, logout } from "redux/authSplice";
 
 import Cookies from "universal-cookie";
 import { useAppDispatch } from "../../redux/hooks";
 import { IUser } from "../../types/ServerEntity";
-import { addListCartItem } from "redux/cartSplice";
 function SigninForm() {
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
@@ -36,13 +35,21 @@ function SigninForm() {
     return (
         <Form>
             <h2 className="font-semibold text-3xl mx-auto text-center -mt-2">Sign in</h2>
-            <Input label="Email" type="email" placeholder="Enter email" onChange={handleEmailChange} value={email} />
+            <Input
+                label="Email"
+                type="email"
+                placeholder="Enter email"
+                onChange={handleEmailChange}
+                value={email}
+                autoComplete="username"
+            />
             <Input
                 label="Password"
                 type="password"
                 placeholder="password"
                 onChange={handlePasswordChange}
                 value={password}
+                autoComplete="current-password"
             />
             <div className="flex justify-end">
                 <Link to={"/forgotpass"} className="text-white hover:underline text-sm -mt-2">

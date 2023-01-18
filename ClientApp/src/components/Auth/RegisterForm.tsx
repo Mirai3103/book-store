@@ -9,11 +9,17 @@ function RegisterForm() {
     return (
         <Form>
             <h2 className="font-semibold text-3xl mx-auto text-center -mt-2">Register</h2>
-            <Input label="Full name" type="text" placeholder="Your full name" required />
+            <Input label="Full name" type="text" placeholder="Your full name" required autoComplete="name" />
 
-            <Input label="Email" type="email" placeholder="Enter email" required />
-            <Input label="Password" type="password" placeholder="password" required />
-            <Input label="Password" type="password" placeholder="repeat password" required />
+            <Input label="Email" type="email" placeholder="Enter email" required autoComplete="email" />
+            <Input label="Password" type="password" placeholder="password" required autoComplete="new-password" />
+            <Input
+                label="Password"
+                type="password"
+                placeholder="repeat password"
+                required
+                autoComplete="new-password"
+            />
 
             <CheckBox label="I accept  the terms and conditions" />
             <Button classColor={colors.invertPrimary}>Register </Button>

@@ -52,15 +52,19 @@ export const authInstance = axios.create({
     },
     withCredentials: true,
 });
+let refreshingPromise: Promise<any> | null = null;
+
 authInstance.interceptors.request.use(
     async (config: any) => {
+        if (refreshingPromise) return await refreshingPromise;
         const token = cookies.get("accessToken");
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
             return config;
         }
         //refresh token
-        const response = await refreshAccessToken();
+        refreshingPromise = refreshAccessToken();
+        const response = await refreshingPromise;
         if (response) {
             config.headers.Authorization = `Bearer ${response.accessToken}`;
             cookies.set("accessToken", response.accessToken, {
@@ -68,8 +72,11 @@ authInstance.interceptors.request.use(
                 maxAge: 60 * 60 * 24 * 7,
             });
         } else {
+            refreshingPromise = null;
             throw new axios.Cancel("Please login again");
         }
+        refreshingPromise = null;
+
         return config;
     },
     function (error) {
@@ -80,20 +87,31 @@ authInstance.interceptors.request.use(
 authInstance.interceptors.response.use(
     (response) => response,
     async (error) => {
+        console.log(error);
+
         const code = error.response.status;
         const config = error.config;
         if (code === 401) {
-            const data = await refreshAccessToken();
+            let data: any = null;
+            if (refreshingPromise) {
+                data = await refreshingPromise;
+            } else {
+                data = await refreshAccessToken();
+            }
             if (data) {
                 cookies.set("accessToken", data.accessToken, {
                     path: "/",
                     maxAge: 60 * 60 * 24 * 7,
                 });
+                refreshingPromise = null;
                 return authInstance.request(config);
             } else {
-                throw new axios.Cancel("Please login again");
+                refreshingPromise = null;
+                return new axios.Cancel("Please login again");
             }
         }
+        refreshingPromise = null;
+
         return error;
     }
 );

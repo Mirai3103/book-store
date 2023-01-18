@@ -3,7 +3,7 @@ import Routes from "./routes";
 import { RouterProvider } from "react-router-dom";
 import routes from "./routes/index";
 import React from "react";
-import { authInstance } from "./utils/service";
+import { authInstance, cookies } from "./utils/axiosInstance";
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { login, logout, selectIsAuthenticated } from "./redux/authSplice";
@@ -21,15 +21,20 @@ function App() {
             .catch((err) => {
                 if (err instanceof axios.CanceledError) {
                     dispath(logout());
-                } else {
-                    console.log(err);
                 }
             });
-    }, []);
+    }, [isAuthenticated]);
     React.useEffect(() => {
-        authInstance.get("/api/User/GetCartDetails").then((res) => {
-            dispath(addListCartItem(res.data));
-        });
+        if (isAuthenticated) {
+            authInstance
+                .get("/api/User/GetCartDetails")
+                .then((res) => {
+                    dispath(addListCartItem(res.data));
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
     }, [isAuthenticated]);
     return (
         <>

@@ -1,8 +1,7 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import store, { RootState } from "./store";
 import { IBookPreview } from "../types/ServerEntity";
-import { authInstance } from "../utils/service";
-
+import { authInstance } from "../utils/axiosInstance";
 export interface CartItem {
     bookId: number;
     book: IBookPreview;
