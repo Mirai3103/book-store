@@ -9,9 +9,11 @@ namespace book_ecommerce.Controllers
     public class BookController : ControllerBase
     {
         private readonly IBookService _bookService;
-        public BookController(IBookService bookService)
+        private readonly ISeriesService _seriesService;
+        public BookController(IBookService bookService, ISeriesService seriesService)
         {
             _bookService = bookService;
+            _seriesService = seriesService;
         }
         [HttpGet(Name = "GetAllBook")]
         public IActionResult GetAll([FromQuery] int page = 1, [FromQuery] int limit = 50)
@@ -51,6 +53,17 @@ namespace book_ecommerce.Controllers
         public IActionResult AdvancedSearch([FromBody] Query query)
         {
             var books = _bookService.AdvancedSearch(query);
+            return Ok(books);
+        }
+        [HttpGet(Name = "GetTrendingBook")]
+        public IActionResult GetTrendingBook([FromQuery] TrendingCategory category, [FromQuery] int limit = 8, [FromQuery] int page = 1)
+        {
+
+            if (category == TrendingCategory.TopSeries)
+            {
+                return Ok(_seriesService.GetTopSeries(page, limit));
+            }
+            var books = _bookService.GetTrendingBook(category, limit, page);
             return Ok(books);
         }
     }

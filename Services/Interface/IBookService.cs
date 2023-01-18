@@ -10,7 +10,17 @@ public enum SortOrder
     Oldest = 7,
 }
 
-
+public enum TrendingCategory
+{
+    TopSelling = 0,
+    TopNew = 1,
+    TopDiscount = 2,
+    TopSeries = 3,
+    TopRate = 4,
+    TopFavourite = 5,
+    TopRecommend = 6,
+    FlashSale = 7,
+}
 public class Query
 {
     public class PriceRange
@@ -50,6 +60,7 @@ public interface IBookService
     public IEnumerable<dynamic> SearchByName(string name);
     public IEnumerable<dynamic> GetBooksSameSeries(int bookId, int limit = 8);
     public IEnumerable<dynamic> GetBooksSameAuthor(int bookId, int limit = 8);
+    public IEnumerable<dynamic> GetTrendingBook(TrendingCategory category, int limit = 8, int page = 1);
     public dynamic AdvancedSearch(Query query);
     public IEnumerable<string> GetAllLanguage();
 

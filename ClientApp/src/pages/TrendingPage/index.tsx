@@ -82,6 +82,7 @@ function TrendingPage() {
         setIsLoadingNewTab(true);
     };
     const RenderPrewviewComponent = (books[0] as any).isSeries ? SeriesPreview : BookPreview;
+
     return (
         <div className="w-full h-full ">
             <div className=" bg-white rounded-md shadow-lg m-3">
@@ -116,6 +117,7 @@ function TrendingPage() {
                                     book={book}
                                     series={book as any}
                                     type={"short"}
+                                    className={(book as any).isSeries ? "w-[450px]" : ""}
                                 />
                             ))
                         )}

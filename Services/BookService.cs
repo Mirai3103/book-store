@@ -1,6 +1,8 @@
 using System.Linq;
 using System.Net;
 using book_ecommerce.Models;
+using Microsoft.EntityFrameworkCore;
+
 namespace book_ecommerce.Services;
 public class BookService : IBookService
 {
@@ -199,5 +201,34 @@ public class BookService : IBookService
     {
         var books = _context.Books.Where(b => b.DeletedAt == null && (b.Name.Contains(name) || b.Title.Contains(name))).Select(SelectPreview).ToList();
         return books;
+    }
+
+    public IEnumerable<dynamic> GetTrendingBook(TrendingCategory category, int limit = 8, int page = 1)
+    {
+        var skip = (page - 1) * limit;
+        var books = GetByTrendingCategory(category).Select(SelectPreview).Skip(skip).Take(limit).ToList();
+        return books;
+    }
+    private IQueryable<Book> GetByTrendingCategory(TrendingCategory category)
+    {
+        switch (category)
+        {
+            case TrendingCategory.FlashSale:
+                return _context.Books.Where(b => b.DeletedAt == null).OrderBy(b => b.Discount);
+            case TrendingCategory.TopDiscount:
+                return _context.Books.Where(b => b.DeletedAt == null && b.Discount > 0).OrderByDescending(b => b.Discount);
+            case TrendingCategory.TopFavourite:
+                return _context.Books.Where(b => b.DeletedAt == null).OrderByDescending(b => b.Name.Length);
+            case TrendingCategory.TopRate:
+                return _context.Books.Where(b => b.DeletedAt == null).OrderByDescending(b => b.Author ?? "2");
+            case TrendingCategory.TopNew:
+                return _context.Books.Where(b => b.DeletedAt == null).OrderByDescending(b => b.CreatedAt);
+            case TrendingCategory.TopSelling:
+                return _context.Books.Where(b => b.DeletedAt == null).OrderByDescending(b => b.Billdetails.Count);
+            default:
+                return _context.Books.Where(b => b.DeletedAt == null).OrderByDescending(b => b.CreatedAt);
+
+        }
+
     }
 }

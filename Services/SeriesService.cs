@@ -35,13 +35,15 @@ public class SeriesService : ISeriesService
         return listSeries;
     }
 
-    public IEnumerable<dynamic> GetTopSeries()
+    public IEnumerable<dynamic> GetTopSeries(int page = 1, int limit = 8)
     {
+        var skip = (page - 1) * limit;
         var topSeries = _context.Series
             .Include(s => s.Books)
             .Include(s => s.Publisher)
             .OrderByDescending(s => s.NumberOfFollowers)
-            .Take(6)
+            .Skip(skip)
+            .Take(limit)
             .Select(s => new
             {
                 Id = s.Id,
@@ -52,6 +54,7 @@ public class SeriesService : ISeriesService
                 Publisher = new { Id = s.Publisher != null ? s.Publisher.Id : 0, Name = s.Publisher != null ? s.Publisher.Name : "" },
                 NumberOfFollowers = s.NumberOfFollowers,
                 UpdatedAt = s.UpdatedAt,
+                IsSeries = true
             }
                ).ToList();
 

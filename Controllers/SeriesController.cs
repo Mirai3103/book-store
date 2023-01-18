@@ -20,9 +20,9 @@ public class SeriesController : ControllerBase
         return Ok(series);
     }
     [HttpGet(Name = "GetTopSeries")]
-    public IActionResult GetTopSeries()
+    public IActionResult GetTopSeries([FromQuery] int page = 1, [FromQuery] int limit = 10)
     {
-        var topSeries = _seriesService.GetTopSeries();
+        var topSeries = _seriesService.GetTopSeries(page, limit);
         return Ok(topSeries);
     }
 }
