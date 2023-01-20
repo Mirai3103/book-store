@@ -5,6 +5,8 @@ import { IBookPreview } from "../../types/ServerEntity";
 import axios, { AxiosResponse } from "axios";
 import BookPreview from "../../components/BookPreview";
 import { ButtonOutline } from "../../components/Button";
+import { Link } from "react-router-dom";
+import { TrendingCategory } from "pages/TrendingPage";
 export default function BigSale() {
     const [books, setBooks] = React.useState<IBookPreview[]>([]);
     const [loading, setLoading] = React.useState(true);
@@ -35,7 +37,9 @@ export default function BigSale() {
                 )}
             </div>
             <div className="flex w-full justify-center py-4">
-                <ButtonOutline className="w-40 font-bold text-xl">Xem thêm</ButtonOutline>
+                <Link to={`/trending?category=${TrendingCategory[TrendingCategory.TopDiscount]}`}>
+                    <ButtonOutline className="w-40 font-bold text-xl">Xem thêm</ButtonOutline>
+                </Link>
             </div>
         </div>
     );

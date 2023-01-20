@@ -1,5 +1,6 @@
 
 
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 
 namespace book_ecommerce.Controllers;
@@ -22,7 +23,9 @@ public class SeriesController : ControllerBase
     [HttpGet(Name = "GetTopSeries")]
     public IActionResult GetTopSeries([FromQuery] int page = 1, [FromQuery] int limit = 10)
     {
-        var topSeries = _seriesService.GetTopSeries(page, limit);
-        return Ok(topSeries);
+        if (!User.Identity.IsAuthenticated) return Ok(_seriesService.GetTopSeries(page, limit));
+
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+        return Ok(_seriesService.GetTopSeries(page, limit, userId));
     }
 }

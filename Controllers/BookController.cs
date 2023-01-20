@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace book_ecommerce.Controllers
@@ -61,7 +62,16 @@ namespace book_ecommerce.Controllers
 
             if (category == TrendingCategory.TopSeries)
             {
-                return Ok(_seriesService.GetTopSeries(page, limit));
+                int? userId = null;
+                try
+                {
+                    userId = int.Parse((HttpContext.User.Identity as ClaimsIdentity)?.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
+                }
+                catch (Exception)
+                {
+                }
+                return Ok(_seriesService.GetTopSeries(page, limit, userId));
+
             }
             var books = _bookService.GetTrendingBook(category, limit, page);
             return Ok(books);

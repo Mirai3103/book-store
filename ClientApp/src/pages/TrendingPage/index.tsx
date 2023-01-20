@@ -1,11 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
-import { instance } from "utils/axiosInstance";
+import { authInstance, instance as noAuthInstance } from "utils/axiosInstance";
 import { IBookPreview } from "../../types/ServerEntity";
 import LoadingScreen from "../../components/LoadingScreen";
 import BookPreview from "components/BookPreview";
 import SeriesPreview from "../../components/SeriesPreview";
 import Loading from "components/Loading";
+import InfinityScroll from "components/InfinityScroll";
+import useStateDebounce from "hooks/useStateDebounce";
+import { BreadCrumb } from "redux/pageStateSplice";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { changeBreadCrumbs, changeTitle } from "../../redux/pageStateSplice";
+import { selectIsAuthenticated } from "redux/authSplice";
 
 const categories = [
     {
@@ -39,7 +45,7 @@ const categories = [
     },
 ];
 
-enum TrendingCategory {
+export enum TrendingCategory {
     TopSelling = 0,
     TopNew = 1,
     TopDiscount = 2,
@@ -49,12 +55,38 @@ enum TrendingCategory {
     TopRecommend = 6,
     FlashSale = 7,
 }
+function createBreadcrumb(category: TrendingCategory): BreadCrumb[] {
+    const breadcrumb: BreadCrumb[] = [
+        {
+            name: "Home",
+            path: "/",
+        },
+    ];
+    breadcrumb.push({
+        name: "Trending",
+        path: "/trending",
+    });
+    breadcrumb.push({
+        name: categories[category].label,
+        path: "/trending?category=" + category,
+    });
+    return breadcrumb;
+}
 
 function TrendingPage() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [books, setBooks] = useState<IBookPreview[] | null>(null);
     const [currentTab, setCurrentTab] = useState<TrendingCategory>(TrendingCategory.TopSelling);
     const [isLoadingNewTab, setIsLoadingNewTab] = useState(false);
+    const [page, setPage] = useStateDebounce(1, 1000);
+    const [isEnd, setIsEnd] = useState(false);
+    const isAuthenticated = useAppSelector(selectIsAuthenticated);
+    const dispatch = useAppDispatch();
+    useEffect(() => {
+        dispatch(changeTitle("Xu hướng mua sắm"));
+        dispatch(changeBreadCrumbs(createBreadcrumb(currentTab)));
+    }, [currentTab]);
+
     useEffect(() => {
         const category = searchParams.get("category");
         if (category) {
@@ -68,11 +100,26 @@ function TrendingPage() {
         }
     }, [searchParams.get("category")]);
     useEffect(() => {
-        instance.get(`/api/Book/GetTrendingBook?category=${currentTab}&limit=28&page=1`).then((res) => {
+        const instance = isAuthenticated ? authInstance : noAuthInstance;
+        instance.get(`/api/Book/GetTrendingBook?category=${currentTab}&limit=28&page=${page}`).then((res) => {
             setBooks(res.data);
             setIsLoadingNewTab(false);
         });
-    }, [currentTab]);
+    }, [currentTab, isAuthenticated]);
+    const handleLoadMore = useCallback(async () => {
+        if (!isEnd) {
+            const instance = isAuthenticated ? authInstance : noAuthInstance;
+            const res = await instance.get(
+                `/api/Book/GetTrendingBook?category=${currentTab}&limit=28&page=${page + 1}`
+            );
+            if (res.data.length === 0) {
+                setIsEnd(true);
+            } else {
+                setBooks((prev) => [...(prev || []), ...res.data]);
+                setPage((prev) => prev + 1);
+            }
+        }
+    }, [currentTab, page, isEnd, isAuthenticated]);
     if (!books) {
         return <LoadingScreen />;
     }
@@ -81,6 +128,7 @@ function TrendingPage() {
         setSearchParams({ category: TrendingCategory[tab] });
         setIsLoadingNewTab(true);
     };
+    console.log(books[0]);
     const RenderPrewviewComponent = (books[0] as any).isSeries ? SeriesPreview : BookPreview;
 
     return (
@@ -105,21 +153,26 @@ function TrendingPage() {
                             </div>
                         ))}
                     </div>
-                    <div className="flex flex-wrap gap-1 gap-y-2 justify-between pb-2 px-4 min-h-screen">
+                    <div className="">
                         {isLoadingNewTab ? (
                             <div className="w-full h-full mt-16 flex justify-center items-center">
                                 <Loading />
                             </div>
                         ) : (
-                            books.map((book) => (
-                                <RenderPrewviewComponent
-                                    key={book.id}
-                                    book={book}
-                                    series={book as any}
-                                    type={"short"}
-                                    className={(book as any).isSeries ? "w-[450px]" : ""}
-                                />
-                            ))
+                            <InfinityScroll
+                                className="flex flex-wrap gap-1 gap-y-2 justify-between pb-2 px-4 min-h-screen"
+                                onIntersect={handleLoadMore}
+                            >
+                                {books.map((book) => (
+                                    <RenderPrewviewComponent
+                                        key={book.id}
+                                        book={book}
+                                        series={book as any}
+                                        type={"short"}
+                                        className={(book as any).isSeries ? "w-[450px]" : ""}
+                                    />
+                                ))}
+                            </InfinityScroll>
                         )}
                     </div>
                 </div>

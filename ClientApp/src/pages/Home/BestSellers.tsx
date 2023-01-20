@@ -6,8 +6,10 @@ import axios from "axios";
 import BookPreview from "../../components/BookPreview";
 import { Swiper, SwiperSlide, SwiperRef } from "swiper/react";
 import "swiper/css";
-import { Autoplay, Navigation } from "swiper";
+import { Autoplay } from "swiper";
 import "swiper/css/navigation";
+import { Link } from "react-router-dom";
+import { TrendingCategory } from "pages/TrendingPage";
 export default function BestSellers({ setIsLoaded }: { setIsLoaded: React.Dispatch<React.SetStateAction<boolean>> }) {
     const [books, setBooks] = React.useState<IBookPreview[]>([]);
     const [loading, setLoading] = React.useState(true);
@@ -29,7 +31,9 @@ export default function BestSellers({ setIsLoaded }: { setIsLoaded: React.Dispat
         <div className="w-full bg-white rounded-md shadow-lg mt-3">
             <div className="flex justify-between py-5 px-4 border-b items-center">
                 <h2 className="font-semibold text-2xl">Bán chạy nhất</h2>
-                <Button>Xem thêm</Button>
+                <Link to={`/trending?category=${TrendingCategory[TrendingCategory.TopSelling]}`}>
+                    <Button>Xem thêm</Button>
+                </Link>
             </div>
             <div className={loading ? `min-h-[300px] grid place-items-center` : ` flex justify-between pb-2 px-4`}>
                 {loading ? (

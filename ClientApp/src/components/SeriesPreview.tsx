@@ -2,7 +2,8 @@ import * as React from "react";
 import { ISeries } from "../types/ServerEntity";
 import Button from "./Button";
 import { MdOutlineAdd } from "react-icons/md";
-
+import { ButtonOutline } from "./Button";
+import { AiOutlineCheck } from "react-icons/ai";
 export interface SeriesPreviewProps {
     series: ISeries;
     type: "full" | "short";
@@ -31,22 +32,40 @@ export default function SeriesPreview(props: SeriesPreviewProps) {
                     <div className="text-blue-600 text-sm">{props.series.numberOfFollowers} lượt theo dõi</div>
                     {props.type == "short" && (
                         <div className="w-full flex justify-end">
-                            <Button className="w-40">
-                                <div className="flex justify-center items-center content-center">
-                                    <MdOutlineAdd className="font-bold text-2xl text-white" /> <span>Theo dõi</span>
-                                </div>
-                            </Button>
+                            {props.series.isFollowed ? (
+                                <Button className="w-40 text-base">
+                                    <div className="flex justify-center items-center content-center">
+                                        <AiOutlineCheck className="font-bold text-2xl " />
+                                        <span>Bỏ theo dõi</span>
+                                    </div>
+                                </Button>
+                            ) : (
+                                <ButtonOutline className="w-40 group ">
+                                    <div className="flex justify-center items-center content-center">
+                                        <MdOutlineAdd className="font-bold text-2xl " /> <span>Theo dõi</span>
+                                    </div>
+                                </ButtonOutline>
+                            )}
                         </div>
                     )}
                 </div>
             </div>
             {props.type == "full" && (
                 <div className="flex flex-col gap-y-2 items-center justify-end">
-                    <Button className="w-9">
-                        <div className="flex justify-center items-center content-center">
-                            <MdOutlineAdd className="font-bold text-2xl text-white" /> <span>Theo dõi</span>
-                        </div>
-                    </Button>
+                    {props.series.isFollowed ? (
+                        <Button className="w-9 text-base">
+                            <div className="flex justify-center items-center content-center">
+                                <AiOutlineCheck className="font-bold text-2xl " /> <span>Bỏ theo dõi</span>
+                            </div>
+                        </Button>
+                    ) : (
+                        <ButtonOutline className="w-9 group ">
+                            <div className="flex justify-center items-center content-center ">
+                                <MdOutlineAdd className="font-bold text-2xl " />
+                                <span>Theo dõi</span>
+                            </div>
+                        </ButtonOutline>
+                    )}
                 </div>
             )}
         </div>

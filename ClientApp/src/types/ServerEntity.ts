@@ -84,6 +84,7 @@ export interface ISeries {
     };
     publisher: IPublisher;
     numberOfFollowers: number;
+    isFollowed: boolean;
 }
 
 export interface IImage {

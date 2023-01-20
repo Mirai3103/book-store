@@ -12,7 +12,7 @@ public class SeriesService : ISeriesService
         _context = context;
     }
 
-    public IEnumerable<dynamic> GetAllSeries(int page, int limit)
+    public IEnumerable<dynamic> GetAllSeries(int page, int limit, int? userId = null)
     {
         var listSeries = _context.Series
             .Include(s => s.Books)
@@ -29,13 +29,14 @@ public class SeriesService : ISeriesService
                 Publisher = new { Id = s.Publisher != null ? s.Publisher.Id : 0, Name = s.Publisher != null ? s.Publisher.Name : "" },
                 NumberOfFollowers = s.NumberOfFollowers == 0 ? (int)(new Random().NextDouble() * 100000) : s.NumberOfFollowers,
                 UpdatedAt = s.UpdatedAt,
+                IsFollowed = userId != null ? s.Users.Any(u => u.Id == userId) : false
             }
-               ).ToList();
+               );
 
-        return listSeries;
+        return listSeries.ToList();
     }
 
-    public IEnumerable<dynamic> GetTopSeries(int page = 1, int limit = 8)
+    public IEnumerable<dynamic> GetTopSeries(int page = 1, int limit = 8, int? userId = null)
     {
         var skip = (page - 1) * limit;
         var topSeries = _context.Series
@@ -54,10 +55,11 @@ public class SeriesService : ISeriesService
                 Publisher = new { Id = s.Publisher != null ? s.Publisher.Id : 0, Name = s.Publisher != null ? s.Publisher.Name : "" },
                 NumberOfFollowers = s.NumberOfFollowers,
                 UpdatedAt = s.UpdatedAt,
-                IsSeries = true
+                IsSeries = true,
+                IsFollowed = userId != null ? s.Users.Any(u => u.Id == userId) : false
             }
-               ).ToList();
+               );
 
-        return topSeries;
+        return topSeries.ToList();
     }
 }
