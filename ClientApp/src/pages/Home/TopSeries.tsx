@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ISeries } from "../../types/ServerEntity";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import Loading from "../../components/Loading";
 import { ButtonOutline } from "../../components/Button";
 import SeriesPreview from "../../components/SeriesPreview";
@@ -8,17 +8,20 @@ import { Link } from "react-router-dom";
 import { TrendingCategory } from "pages/TrendingPage";
 import { selectIsAuthenticated } from "../../redux/authSplice";
 import { useAppSelector } from "redux/hooks";
-import { authInstance } from "utils/axiosInstance";
+import { authInstance, instance as noAuthInstance } from "utils/axiosInstance";
 const TopSeries = () => {
     const [series, setSeries] = React.useState<ISeries[]>([]);
     const [loading, setLoading] = React.useState(true);
     const isAuthenticated = useAppSelector(selectIsAuthenticated);
     React.useEffect(() => {
-        const instance = isAuthenticated ? authInstance : axios;
-        instance.get<ISeries[]>("/api/Series/GetTopSeries?page=1&limit=6").then((res) => {
-            setSeries(res.data);
-            setLoading(false);
-        });
+        const timer = setTimeout(() => {
+            const instance = isAuthenticated ? authInstance : noAuthInstance;
+            instance.get<ISeries[]>("/api/Series/GetTopSeries?page=1&limit=6").then((res) => {
+                setSeries(res.data);
+                setLoading(false);
+            });
+        }, 500);
+        return () => clearTimeout(timer);
     }, [isAuthenticated]);
 
     return (

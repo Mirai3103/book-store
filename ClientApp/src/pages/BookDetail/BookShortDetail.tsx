@@ -6,8 +6,10 @@ import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 import Button, { ButtonOutline } from "../../components/Button";
 import { BsCartPlusFill } from "react-icons/bs";
 import { useAppDispatch } from "redux/hooks";
-import { addBookAsync } from "redux/cartSplice";
+import { addBookAsync, changeAllCartItemCheck, changeCartItemCheck, quickBuyAsync } from "redux/cartSplice";
 import { createToast } from "components/Toast";
+import SelectQuantity from "../../components/SelectQuantity";
+import { useNavigate } from "react-router-dom";
 
 interface IBookShortDetailProps {
     book: IBook;
@@ -17,35 +19,19 @@ interface IBookShortDetailProps {
 export default function BookShortDetail({ book, className }: IBookShortDetailProps) {
     const finalPrice = book.price - book.price * (book.discount / 100);
     const [quantity, setQuantity] = React.useState(1);
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        const numberRegex = /^[0-9]+$/;
-        if (!numberRegex.test(value)) {
-            return;
-        }
-        if (value == "") {
-            setQuantity(1);
-            return;
-        }
-        const number = parseInt(value);
-        if (number < 1) {
-            setQuantity(1);
-            return;
-        }
-        setQuantity(number);
-    };
-    const hanldeIncreaseQuantity = () => {
-        setQuantity((oldQuantity) => oldQuantity + 1);
-    };
-    const handleDecreaseQuantity = () => {
-        if (quantity == 1) return;
-        setQuantity((oldQuantity) => oldQuantity - 1);
+    const navigate = useNavigate();
+    const handleQuantityChange = (newQuantity: number) => {
+        setQuantity(newQuantity);
     };
     const dispatch = useAppDispatch();
 
     const handleAddToCart = () => {
         dispatch(addBookAsync({ bookId: book.id, book: book, quantity: quantity }));
         createToast("Thành công!", "Thêm vào giỏ hàng thành công", "success", 3000);
+    };
+    const handleQuickBuy = () => {
+        dispatch(quickBuyAsync({ bookId: book.id, book: book, quantity: quantity }));
+        navigate("/cart");
     };
     return (
         <div className="flex flex-col gap-y-3">
@@ -78,26 +64,7 @@ export default function BookShortDetail({ book, className }: IBookShortDetailPro
             </div>
             <div className="flex items-center gap-x-7 text-lg font-semibold">
                 <span className="font-semibold text-lg text-[#4c4c4c]">Số lượng: </span>
-                <div className="flex">
-                    <span
-                        className="border border-r-0 cursor-pointer px-2 flex justify-center items-center"
-                        onClick={handleDecreaseQuantity}
-                    >
-                        <AiOutlineMinus />
-                    </span>
-                    <input
-                        type="text"
-                        className="w-24 border  outline-none px-2 py-1 text-end"
-                        value={quantity}
-                        onChange={handleInputChange}
-                    />
-                    <span
-                        className="border border-l-0 px-2 cursor-pointer flex justify-center items-center"
-                        onClick={hanldeIncreaseQuantity}
-                    >
-                        <AiOutlinePlus />
-                    </span>
-                </div>
+                <SelectQuantity handleQuantityChange={handleQuantityChange} />
             </div>
             <div className="flex items-center gap-x-7 text-lg font-semibold my-2    ">
                 <span className="font-semibold text-lg text-[#4c4c4c]">Thành tiền:</span>
@@ -108,7 +75,7 @@ export default function BookShortDetail({ book, className }: IBookShortDetailPro
                     <BsCartPlusFill className="font-bold text-lg" />
                     <span className="font-semibold">Thêm vào giỏ hàng</span>
                 </ButtonOutline>
-                <Button className="w-48">
+                <Button className="w-48" onClick={handleQuickBuy}>
                     <span className="font-semibold">Mua ngay</span>
                 </Button>
             </div>

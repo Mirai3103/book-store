@@ -8,6 +8,7 @@ import BookDetail from "../pages/BookDetail/index";
 import SearchPage from "../pages/Search";
 import TestPage from "pages/Test";
 import TrendingPage from "pages/TrendingPage";
+import CartPage from "../pages/Cart/index";
 
 // const routes2: RouteObject[] = [
 //     {
@@ -91,6 +92,10 @@ const routes = createBrowserRouter([
                     {
                         path: "/trending",
                         element: <TrendingPage />,
+                    },
+                    {
+                        path: "/cart",
+                        element: <CartPage />,
                     },
                 ],
             },

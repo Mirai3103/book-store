@@ -4,6 +4,10 @@ import Button from "./Button";
 import { MdOutlineAdd } from "react-icons/md";
 import { ButtonOutline } from "./Button";
 import { AiOutlineCheck } from "react-icons/ai";
+import { selectIsAuthenticated } from "../redux/authSplice";
+import { useAppSelector } from "../redux/hooks";
+import { createToast } from "./Toast";
+import { authInstance } from "../utils/axiosInstance";
 export interface SeriesPreviewProps {
     series: ISeries;
     type: "full" | "short";
@@ -11,6 +15,23 @@ export interface SeriesPreviewProps {
 }
 
 export default function SeriesPreview(props: SeriesPreviewProps) {
+    const isAuthenticated = useAppSelector(selectIsAuthenticated);
+    const [isFollowed, setIsFollowed] = React.useState(props.series.isFollowed);
+    const handleFollow = () => {
+        if (!isAuthenticated) {
+            createToast("error", "Bạn cần đăng nhập để theo dõi", "error");
+            return;
+        }
+        authInstance
+            .post(`/api/Series/ToggleFollow`, props.series.id)
+            .then((res) => {
+                setIsFollowed((prev) => !prev);
+                createToast("success", "Đã theo dõi!", "success");
+            })
+            .catch((err) => {
+                createToast("error", "Đã có lỗi xảy ra", "error");
+            });
+    };
     return (
         <div className={"flex bg-white py-3 group shadow-md my-1 hover:shadow-xl px-2 " + props.className}>
             <div className="flex gap-x-3 md:gap-x-1 w-full">
@@ -32,15 +53,15 @@ export default function SeriesPreview(props: SeriesPreviewProps) {
                     <div className="text-blue-600 text-sm">{props.series.numberOfFollowers} lượt theo dõi</div>
                     {props.type == "short" && (
                         <div className="w-full flex justify-end">
-                            {props.series.isFollowed ? (
-                                <Button className="w-40 text-base">
+                            {isFollowed ? (
+                                <Button className="w-40 text-base" onClick={handleFollow}>
                                     <div className="flex justify-center items-center content-center">
                                         <AiOutlineCheck className="font-bold text-2xl " />
                                         <span>Bỏ theo dõi</span>
                                     </div>
                                 </Button>
                             ) : (
-                                <ButtonOutline className="w-40 group ">
+                                <ButtonOutline className="w-40 group " onClick={handleFollow}>
                                     <div className="flex justify-center items-center content-center">
                                         <MdOutlineAdd className="font-bold text-2xl " /> <span>Theo dõi</span>
                                     </div>
@@ -52,14 +73,14 @@ export default function SeriesPreview(props: SeriesPreviewProps) {
             </div>
             {props.type == "full" && (
                 <div className="flex flex-col gap-y-2 items-center justify-end">
-                    {props.series.isFollowed ? (
-                        <Button className="w-9 text-base">
+                    {isFollowed ? (
+                        <Button className="w-9 text-base" onClick={handleFollow}>
                             <div className="flex justify-center items-center content-center">
                                 <AiOutlineCheck className="font-bold text-2xl " /> <span>Bỏ theo dõi</span>
                             </div>
                         </Button>
                     ) : (
-                        <ButtonOutline className="w-9 group ">
+                        <ButtonOutline className="w-9 group " onClick={handleFollow}>
                             <div className="flex justify-center items-center content-center ">
                                 <MdOutlineAdd className="font-bold text-2xl " />
                                 <span>Theo dõi</span>

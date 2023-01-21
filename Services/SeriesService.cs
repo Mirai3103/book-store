@@ -1,4 +1,4 @@
-
+﻿
 
 using book_ecommerce.Models;
 using Microsoft.EntityFrameworkCore;
@@ -61,5 +61,28 @@ public class SeriesService : ISeriesService
                );
 
         return topSeries.ToList();
+    }
+
+    public void ToggleFollowSeries(int seriesId, int userId)
+    {
+        var series = _context.Series.Find(seriesId);
+        var user = _context.Users.Find(userId);
+        if (series is null || user is null)
+        {
+            throw new HttpResponseException(System.Net.HttpStatusCode.NotFound, "Không tìm thấy series hoặc user");
+        }
+        if (series.Users.Contains(user))
+        {
+            series.Users.Remove(user);
+            series.NumberOfFollowers--;
+        }
+        else
+        {
+            series.Users.Add(user);
+            series.NumberOfFollowers++;
+        }
+        _context.Update(series);
+
+        _context.SaveChanges();
     }
 }

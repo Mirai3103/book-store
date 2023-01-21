@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { authInstance, instance as noAuthInstance } from "utils/axiosInstance";
 import { IBookPreview } from "../../types/ServerEntity";
@@ -76,29 +76,18 @@ function createBreadcrumb(category: TrendingCategory): BreadCrumb[] {
 function TrendingPage() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [books, setBooks] = useState<IBookPreview[] | null>(null);
-    const [currentTab, setCurrentTab] = useState<TrendingCategory>(TrendingCategory.TopSelling);
     const [isLoadingNewTab, setIsLoadingNewTab] = useState(false);
     const [page, setPage] = useStateDebounce(1, 1000);
     const [isEnd, setIsEnd] = useState(false);
     const isAuthenticated = useAppSelector(selectIsAuthenticated);
     const dispatch = useAppDispatch();
-    useEffect(() => {
+
+    const category = searchParams.get("category");
+    const currentTab = (TrendingCategory as any)[category as any] || TrendingCategory.TopSelling;
+    React.useEffect(() => {
         dispatch(changeTitle("Xu hướng mua sắm"));
         dispatch(changeBreadCrumbs(createBreadcrumb(currentTab)));
-    }, [currentTab]);
-
-    useEffect(() => {
-        const category = searchParams.get("category");
-        if (category) {
-            if (TrendingCategory[category as any]) {
-                setCurrentTab((TrendingCategory as any)[category]);
-            } else {
-                setCurrentTab(TrendingCategory.TopSelling);
-            }
-        } else {
-            setCurrentTab(TrendingCategory.TopSelling);
-        }
-    }, [searchParams.get("category")]);
+    }, [currentTab, dispatch]);
     useEffect(() => {
         const instance = isAuthenticated ? authInstance : noAuthInstance;
         instance.get(`/api/Book/GetTrendingBook?category=${currentTab}&limit=28&page=${page}`).then((res) => {
@@ -106,6 +95,10 @@ function TrendingPage() {
             setIsLoadingNewTab(false);
         });
     }, [currentTab, isAuthenticated]);
+    useEffect(() => {
+        setIsEnd(false);
+        setPage(1);
+    }, [currentTab]);
     const handleLoadMore = useCallback(async () => {
         if (!isEnd) {
             const instance = isAuthenticated ? authInstance : noAuthInstance;
@@ -128,7 +121,6 @@ function TrendingPage() {
         setSearchParams({ category: TrendingCategory[tab] });
         setIsLoadingNewTab(true);
     };
-    console.log(books[0]);
     const RenderPrewviewComponent = (books[0] as any).isSeries ? SeriesPreview : BookPreview;
 
     return (

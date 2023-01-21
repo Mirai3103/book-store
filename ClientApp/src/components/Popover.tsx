@@ -1,6 +1,6 @@
 import useElementSize from "hooks/useElementSize";
 import useOnClickOutside from "hooks/useOnClickOutside";
-import React from "react";
+import React, { useMemo } from "react";
 import { createPortal } from "react-dom";
 const portalRoot = document.getElementById("root") as HTMLElement;
 interface Props {
@@ -34,7 +34,7 @@ function PopoverRoot({
     const [ref, size] = useElementSize<HTMLDivElement>();
     useOnClickOutside(ref, onClose, "mousedown");
     const { top, left, height, right } = anchorEl?.getBoundingClientRect() || { top: 0, left: 0, height: 0, right: 0 };
-    React.useEffect(() => {
+    React.useLayoutEffect(() => {
         if (anchorEl) {
             const newStyle = {
                 top: top + height + 3,

@@ -7,16 +7,17 @@ import { BiChevronUpCircle } from "react-icons/bi";
 export default function Layout({ children }: { children: React.ReactNode }) {
     const reactLocation = useLocation();
     const [isLoaded, setIsLoaded] = React.useState(true);
-    React.useLayoutEffect(() => {
-        setIsLoaded(false);
-        setTimeout(() => {
-            window.scrollTo(0, 0);
-            setIsLoaded(true);
-        }, 1000);
-    }, [reactLocation.pathname]);
     const handleScrollToTop = () => {
         window.scrollTo(0, 0);
     };
+    React.useLayoutEffect(() => {
+        setIsLoaded(false);
+        handleScrollToTop();
+        setTimeout(() => {
+            setIsLoaded(true);
+        }, 100);
+    }, [reactLocation.pathname]);
+
     return (
         <div className=" py-0 px-0 relative flex flex-col">
             <Header />

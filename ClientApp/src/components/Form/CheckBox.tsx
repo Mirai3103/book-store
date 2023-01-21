@@ -10,8 +10,6 @@ function CheckBox({ label, ...props }: Props) {
     return (
         <div>
             <MUICheckBox
-                {...props}
-                id={id}
                 sx={{
                     color: "#fff",
                     "&.Mui-checked": {
@@ -19,6 +17,8 @@ function CheckBox({ label, ...props }: Props) {
                         bgcolor: "#02D871",
                     },
                 }}
+                {...props}
+                id={id}
             />
             <label htmlFor={id}>{label}</label>
         </div>

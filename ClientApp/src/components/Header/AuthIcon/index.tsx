@@ -63,7 +63,7 @@ function LogedInAuthIcon({ user }: { user: IUser }) {
                         icon={ImProfile}
                         to="a"
                     />
-                    <Item title="Đơn hàng của tôi" description="Xem và quản lý đơn hàng" icon={ImProfile} to="a" />
+                    <Item title="Đơn hàng của tôi" description="Xem và quản lý đơn hàng" icon={ImProfile} to="/cart" />
                     <div className="flex justify-center p-3">
                         <Button className="font-semibold text-base" onClick={handleLogout}>
                             Đăng xuất

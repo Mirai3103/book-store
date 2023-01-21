@@ -66,6 +66,30 @@ export const cartSplice = createSlice({
             })
             .addCase(clearCartAsync.rejected, (state, action) => {
                 console.log(action.error);
+            })
+            .addCase(setQuantityAsync.fulfilled, (state, action) => {
+                state.cartItems = state.cartItems.map((item) => {
+                    if (item.bookId === action.payload.bookId) {
+                        item.quantity = action.payload.quantity;
+                    }
+                    return item;
+                });
+            })
+            .addCase(quickBuyAsync.fulfilled, (state, action) => {
+                const cartItem = action.payload;
+                cartItem.isCheck = false;
+                const existingCartItem = state.cartItems.find((item) => item.bookId === cartItem.bookId);
+                if (existingCartItem) {
+                    existingCartItem.quantity += cartItem.quantity;
+                    state.cartItems = state.cartItems.filter((item) => item.bookId !== cartItem.bookId);
+                    state.cartItems.unshift(cartItem);
+                } else {
+                    state.cartItems.unshift(cartItem);
+                }
+                state.cartItems = state.cartItems.map((item) => {
+                    item.isCheck = item.bookId === cartItem.bookId;
+                    return item;
+                });
             });
     },
 });
@@ -82,6 +106,20 @@ export const addBookAsync = createAsyncThunk("cart/addBookAsync", async (cartIte
     }
     return cartItem;
 });
+
+export const quickBuyAsync = createAsyncThunk("cart/quickBuyAsync", async (cartItem: CartItem, { getState }) => {
+    const isAuth = (getState() as any).auth.isAuthenticated;
+    if (!isAuth) {
+        return cartItem;
+    } else {
+        const res = await authInstance.post("/api/User/UpdateCart", {
+            bookId: cartItem.bookId,
+            amount: cartItem.quantity,
+        });
+    }
+    return cartItem;
+});
+
 export const removeBookAsync = createAsyncThunk("cart/removeBookAsync", async (bookId: number, { getState }) => {
     const isAuth = (getState() as any).auth.isAuthenticated;
     if (!isAuth) {
@@ -103,19 +141,28 @@ export const clearCartAsync = createAsyncThunk("cart/clearCartAsync", async (_, 
     }
 });
 
-export const setQuantityAsync = createAsyncThunk("cart/setQuantityAsync", async (cartItem: CartItem, { getState }) => {
-    const isAuth = (getState() as any).auth.isAuthenticated;
-    if (!isAuth) {
+export const setQuantityAsync = createAsyncThunk(
+    "cart/setQuantityAsync",
+    async (
+        cartItem: {
+            bookId: number;
+            quantity: number;
+        },
+        { getState }
+    ) => {
+        const isAuth = (getState() as any).auth.isAuthenticated;
+        if (!isAuth) {
+            return cartItem;
+        } else {
+            const res = await authInstance.post("/api/User/UpdateCart", {
+                bookId: cartItem.bookId,
+                amount: cartItem.quantity,
+                isSet: true,
+            });
+        }
         return cartItem;
-    } else {
-        const res = await authInstance.post("/api/User/UpdateCart", {
-            bookId: cartItem.bookId,
-            amount: cartItem.quantity,
-            isSet: true,
-        });
     }
-    return cartItem;
-});
+);
 
 export const selectCartItems = (state: RootState) => state.cart.cartItems;
 export const { changeCartItemCheck, changeAllCartItemCheck, addListCartItem } = cartSplice.actions;

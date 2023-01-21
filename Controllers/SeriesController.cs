@@ -1,6 +1,7 @@
 
 
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace book_ecommerce.Controllers;
@@ -25,7 +26,14 @@ public class SeriesController : ControllerBase
     {
         if (!User.Identity.IsAuthenticated) return Ok(_seriesService.GetTopSeries(page, limit));
 
-        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
         return Ok(_seriesService.GetTopSeries(page, limit, userId));
+    }
+    [HttpPost(Name = "FollowSeries")]
+    [Authorize]
+    public IActionResult ToggleFollow([FromBody] int id)
+    {
+        _seriesService.ToggleFollowSeries(id, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value));
+        return Ok();
     }
 }
