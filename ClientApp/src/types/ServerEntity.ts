@@ -92,3 +92,32 @@ export interface IImage {
     url: string;
     bookId: number;
 }
+export enum PromocodeType {
+    Percentage,
+    Fixed,
+}
+
+export enum ApplyTo {
+    Total,
+    Shipping,
+}
+export interface Promocode {
+    id: number;
+    code: string | null;
+    description: string | null;
+    name: string | null;
+    discount: number | null;
+    maxDiscount: number | null;
+    minOrderAmount: number | null;
+    type: PromocodeType;
+    applyTo: ApplyTo;
+    stock: number | null;
+    applyToCategoryID: number | null;
+    applyToCategory: ICategory | null;
+    allowMultiple: boolean;
+    startDate: string | null;
+    endDate: string | null;
+    createdAt: string | null;
+    deletedAt: string | null;
+    // bills: Bill[];
+}
