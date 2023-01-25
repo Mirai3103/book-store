@@ -5,7 +5,7 @@ using book_ecommerce.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
+using book_ecommerce.Controllers.Models;
 namespace book_ecommerce.Controllers
 {
     [ApiController]
@@ -17,23 +17,19 @@ namespace book_ecommerce.Controllers
         {
             _authService = authService;
         }
-        public struct LoginRequest
-        {
-            public string email { get; set; }
-            public string password { get; set; }
-        }
+
         [HttpPost]
         [AllowAnonymous]
         public IActionResult Login([FromBody] LoginRequest loginRequest)
         {
-            var (accessToken, refreshToken, user) = _authService.Login(loginRequest.email, loginRequest.password);
+            var (accessToken, refreshToken, user) = _authService.Login(loginRequest.Email, loginRequest.Password);
 
             return Ok(new { accessToken, refreshToken, user });
         }
 
         [HttpPost]
         [AllowAnonymous]
-        public IActionResult Register([FromBody] User user)
+        public IActionResult Register([FromBody] UserRegisterPayload user)
         {
             var (accessToken, refreshToken, a) = _authService.Register(user);
             return Ok(new { accessToken, refreshToken, user = a });

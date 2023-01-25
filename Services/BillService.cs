@@ -1,6 +1,7 @@
 ﻿
 using book_ecommerce.Services.Interface;
 using book_ecommerce.Models;
+using book_ecommerce.Controllers.Models;
 namespace book_ecommerce.Services
 {
     public class BillService : IBillService
@@ -10,24 +11,29 @@ namespace book_ecommerce.Services
         {
             _context = context;
         }
-        public bool CreateBill(Bill bill, IEnumerable<Billdetail> billDetails, string? promoCode = null)
+        public bool CreateBill(CreateBillRequestModel request)
         {
+            var shippingAddress = _context.DeliveryAddresses.FirstOrDefault(s => s.Id == request.ShippingAddressId);
+            if (shippingAddress == null)
+            {
+                throw new HttpResponseException(System.Net.HttpStatusCode.NotFound, "Shipping address not found");
+            }
             var newBill = new Bill()
             {
-                Address = bill.Address,
-                UserId = bill.UserId,
+                DeliveryAddressId = request.ShippingAddressId,
+                UserId = request.UserId ?? 1,
                 CreatedAt = DateTime.Now
             };
-            if (promoCode != null)
+            if (request.PromoCode != null)
             {
-                var existPromoCode = _context.Promocodes.FirstOrDefault(p => p.Code == promoCode);
+                var existPromoCode = _context.Promocodes.FirstOrDefault(p => p.Code == request.PromoCode && p.DeletedAt == null && p.StartDate <= DateTime.Now && p.EndDate >= DateTime.Now);
                 if (existPromoCode == null)
                 {
-                    throw new HttpResponseException(System.Net.HttpStatusCode.BadRequest, $"Promo code {promoCode} is not exist");
+                    throw new HttpResponseException(System.Net.HttpStatusCode.BadRequest, $"Promo code {request.PromoCode} is not exist");
                 }
                 if (existPromoCode.EndDate < DateTime.Now && existPromoCode.Stock > 0)
                 {
-                    bill.PromoCode = existPromoCode;
+                    newBill.PromoCode = existPromoCode;
                     existPromoCode.Stock -= 1;
                 }
             }
@@ -35,7 +41,7 @@ namespace book_ecommerce.Services
             _context.Bills.Add(newBill);
             _context.SaveChanges();
             var listBillDetails = new List<Billdetail>();
-            foreach (var item in billDetails)
+            foreach (var item in request.BillDetails)
             {
                 var existDetail = listBillDetails.Where(b => b.BookId == item.BookId).FirstOrDefault();
                 if (existDetail == null)
@@ -51,9 +57,9 @@ namespace book_ecommerce.Services
                     }
                     listBillDetails.Add(new Billdetail()
                     {
-                        Book = book,
+                        BookId = book.Id,
                         BillId = newBill.Id,
-                        Price = (decimal)(book.Price! - book.Price! * book.Discount / 100),
+                        Price = (decimal)(book.Price! - book.Price! * book.Discount / 100) * item.Quantity,
                         Quantity = item.Quantity,
                         Bill = newBill,
                     });
@@ -63,8 +69,10 @@ namespace book_ecommerce.Services
                     existDetail.Quantity += item.Quantity;
                 }
             }
+            newBill.TotalBill = listBillDetails.Sum(b => b.Price);
             _context.Billdetails.AddRange(listBillDetails);
             _context.SaveChanges();
+            // update change from db to bill
             return true;
 
         }

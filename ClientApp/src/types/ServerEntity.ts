@@ -121,3 +121,36 @@ export interface Promocode {
     deletedAt: string | null;
     // bills: Bill[];
 }
+
+//  public record CreateBillRequestModel
+//     (
+//         uint ShippingAddressId,
+//         ICollection<BillDetailRequestModel> BillDetails,
+//         int? UserId = null,
+//         string? PromoCode = null
+//     );
+//     public record BillDetailRequestModel
+//     (
+//         uint BookId,
+//         uint Quantity
+//     );
+export interface ICreateBillRequestModel {
+    shippingAddressId: number;
+    billDetails: IBillDetailRequestModel[];
+    userId?: number;
+    promoCode?: string;
+}
+export interface IBillDetailRequestModel {
+    bookId: number;
+    quantity: number;
+}
+
+export interface DeliveryAddress {
+    id: number;
+    userId: number;
+    fullName: string;
+    phone: string;
+    address: string;
+    deletedAt: string | null;
+    isPrimary: boolean;
+}

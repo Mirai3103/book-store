@@ -1,3 +1,4 @@
+namespace book_ecommerce.Services.Interface;
 
 public interface ISeriesService
 {

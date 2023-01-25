@@ -1,4 +1,5 @@
 using book_ecommerce.Models;
+namespace book_ecommerce.Services.Interface;
 public enum SortOrder
 {
     WeekBestSeller = 1,
@@ -50,10 +51,6 @@ public class Query
 }
 public interface IBookService
 {
-
-
-
-
     public IEnumerable<dynamic> GetAll(int page = 1, int limit = 50);
     public Book GetBookDetail(int id);
     public Book GetByAlias(string alias);

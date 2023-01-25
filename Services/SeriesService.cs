@@ -3,6 +3,8 @@
 using book_ecommerce.Models;
 using Microsoft.EntityFrameworkCore;
 namespace book_ecommerce.Services;
+using book_ecommerce.Services.Interface;
+
 public class SeriesService : ISeriesService
 {
     private readonly BookdataContext _context;
@@ -21,15 +23,15 @@ public class SeriesService : ISeriesService
             .Take(limit)
             .Select(s => new
             {
-                Id = s.Id,
-                Name = s.Name,
-                Alias = s.Alias,
-                Author = s.Author,
+                s.Id,
+                s.Name,
+                s.Alias,
+                s.Author,
                 LastestBook = s.Books.OrderByDescending(b => b.Episode).Select(b => new { Episode = b.Episode, Image = b.ImageCover }).FirstOrDefault(),
                 Publisher = new { Id = s.Publisher != null ? s.Publisher.Id : 0, Name = s.Publisher != null ? s.Publisher.Name : "" },
                 NumberOfFollowers = s.NumberOfFollowers == 0 ? (int)(new Random().NextDouble() * 100000) : s.NumberOfFollowers,
-                UpdatedAt = s.UpdatedAt,
-                IsFollowed = userId != null ? s.Users.Any(u => u.Id == userId) : false
+                s.UpdatedAt,
+                IsFollowed = userId != null && s.Users.Any(u => u.Id == userId)
             }
                );
 
@@ -47,16 +49,16 @@ public class SeriesService : ISeriesService
             .Take(limit)
             .Select(s => new
             {
-                Id = s.Id,
-                Name = s.Name,
-                Alias = s.Alias,
-                Author = s.Author,
+                s.Id,
+                s.Name,
+                s.Alias,
+                s.Author,
                 LastestBook = s.Books.OrderByDescending(b => b.Episode).Select(b => new { Episode = b.Episode, Image = b.ImageCover }).FirstOrDefault(),
                 Publisher = new { Id = s.Publisher != null ? s.Publisher.Id : 0, Name = s.Publisher != null ? s.Publisher.Name : "" },
-                NumberOfFollowers = s.NumberOfFollowers,
-                UpdatedAt = s.UpdatedAt,
+                s.NumberOfFollowers,
+                s.UpdatedAt,
                 IsSeries = true,
-                IsFollowed = userId != null ? s.Users.Any(u => u.Id == userId) : false
+                IsFollowed = userId != null && s.Users.Any(u => u.Id == userId)
             }
                );
 

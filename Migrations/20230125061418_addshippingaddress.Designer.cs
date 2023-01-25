@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using book_ecommerce.Models;
 
@@ -10,9 +11,11 @@ using book_ecommerce.Models;
 namespace bookecommerce.Migrations
 {
     [DbContext(typeof(BookdataContext))]
-    partial class BookdataContextModelSnapshot : ModelSnapshot
+    [Migration("20230125061418_addshippingaddress")]
+    partial class addshippingaddress
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,10 +54,6 @@ namespace bookecommerce.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime");
 
-                    b.Property<uint?>("DeliveryAddressId")
-                        .IsRequired()
-                        .HasColumnType("int unsigned");
-
                     b.Property<ulong?>("IsPaid")
                         .HasColumnType("bit(1)");
 
@@ -63,6 +62,9 @@ namespace bookecommerce.Migrations
 
                     b.Property<int?>("PromoCodeId")
                         .HasColumnType("int");
+
+                    b.Property<uint?>("ShippingAddressId")
+                        .HasColumnType("int unsigned");
 
                     b.Property<uint>("ShippingCost")
                         .HasColumnType("int unsigned");
@@ -80,7 +82,7 @@ namespace bookecommerce.Migrations
                     b.HasKey("Id")
                         .HasName("PRIMARY");
 
-                    b.HasIndex("DeliveryAddressId");
+                    b.HasIndex("ShippingAddressId");
 
                     b.HasIndex(new[] { "PromoCodeId" }, "PromoCodeId");
 
@@ -325,40 +327,6 @@ namespace bookecommerce.Migrations
                     b.ToTable("category", (string)null);
                 });
 
-            modelBuilder.Entity("book_ecommerce.Models.DeliveryAddress", b =>
-                {
-                    b.Property<uint>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int unsigned");
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("IsPrimary")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("DeliveryAddresses");
-                });
-
             modelBuilder.Entity("book_ecommerce.Models.Image", b =>
                 {
                     b.Property<int>("Id")
@@ -595,6 +563,40 @@ namespace bookecommerce.Migrations
                     b.ToTable("series", (string)null);
                 });
 
+            modelBuilder.Entity("book_ecommerce.Models.ShippingAddress", b =>
+                {
+                    b.Property<uint>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int unsigned");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ShippingAddresses");
+                });
+
             modelBuilder.Entity("book_ecommerce.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -693,16 +695,14 @@ namespace bookecommerce.Migrations
 
             modelBuilder.Entity("book_ecommerce.Models.Bill", b =>
                 {
-                    b.HasOne("book_ecommerce.Models.DeliveryAddress", "DeliveryAddress")
-                        .WithMany("Bills")
-                        .HasForeignKey("DeliveryAddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("book_ecommerce.Models.Promocode", "PromoCode")
                         .WithMany("Bills")
                         .HasForeignKey("PromoCodeId")
                         .HasConstraintName("bill_ibfk_2");
+
+                    b.HasOne("book_ecommerce.Models.ShippingAddress", "ShippingAddress")
+                        .WithMany("Bills")
+                        .HasForeignKey("ShippingAddressId");
 
                     b.HasOne("book_ecommerce.Models.User", "User")
                         .WithMany("Bills")
@@ -711,9 +711,9 @@ namespace bookecommerce.Migrations
                         .IsRequired()
                         .HasConstraintName("bill_ibfk_1");
 
-                    b.Navigation("DeliveryAddress");
-
                     b.Navigation("PromoCode");
+
+                    b.Navigation("ShippingAddress");
 
                     b.Navigation("User");
                 });
@@ -797,17 +797,6 @@ namespace bookecommerce.Migrations
                     b.Navigation("Parent");
                 });
 
-            modelBuilder.Entity("book_ecommerce.Models.DeliveryAddress", b =>
-                {
-                    b.HasOne("book_ecommerce.Models.User", "User")
-                        .WithMany("DeliveryAddresses")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("book_ecommerce.Models.Image", b =>
                 {
                     b.HasOne("book_ecommerce.Models.Book", "Book")
@@ -856,6 +845,17 @@ namespace bookecommerce.Migrations
                     b.Navigation("Publisher");
                 });
 
+            modelBuilder.Entity("book_ecommerce.Models.ShippingAddress", b =>
+                {
+                    b.HasOne("book_ecommerce.Models.User", "User")
+                        .WithMany("ShippingAddresses")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("book_ecommerce.Models.Userpayment", b =>
                 {
                     b.HasOne("book_ecommerce.Models.User", "User")
@@ -892,11 +892,6 @@ namespace bookecommerce.Migrations
                     b.Navigation("Promocodes");
                 });
 
-            modelBuilder.Entity("book_ecommerce.Models.DeliveryAddress", b =>
-                {
-                    b.Navigation("Bills");
-                });
-
             modelBuilder.Entity("book_ecommerce.Models.Promocode", b =>
                 {
                     b.Navigation("Bills");
@@ -919,15 +914,20 @@ namespace bookecommerce.Migrations
                     b.Navigation("Books");
                 });
 
+            modelBuilder.Entity("book_ecommerce.Models.ShippingAddress", b =>
+                {
+                    b.Navigation("Bills");
+                });
+
             modelBuilder.Entity("book_ecommerce.Models.User", b =>
                 {
                     b.Navigation("Bills");
 
                     b.Navigation("Cartdetails");
 
-                    b.Navigation("DeliveryAddresses");
-
                     b.Navigation("Reviews");
+
+                    b.Navigation("ShippingAddresses");
 
                     b.Navigation("Userpayment");
                 });

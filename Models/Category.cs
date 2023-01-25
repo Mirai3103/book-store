@@ -18,4 +18,5 @@ public partial class Category
     public virtual ICollection<Category> InverseParent { get; } = new List<Category>();
 
     public virtual Category? Parent { get; set; }
+    public virtual ICollection<Promocode> Promocodes { get; } = new List<Promocode>();
 }

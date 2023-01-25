@@ -25,6 +25,8 @@ public class Startup
         services.AddTransient<IProviderService, ProviderSerice>();
         services.AddTransient<IUserService, UserService>();
         services.AddTransient<IAuthService, AuthService>();
+        services.AddTransient<IPromoService, PromoService>();
+        services.AddTransient<IDeliveryAddressService, DeliveryAddressService>();
         services.AddCors(options =>
        {
            options.AddPolicy("CorsPolicy", builder =>

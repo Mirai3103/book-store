@@ -40,7 +40,7 @@ public partial class BookdataContext : DbContext
     public virtual DbSet<User> Users { get; set; } = null!;
 
     public virtual DbSet<Userpayment> Userpayments { get; set; } = null!;
-
+    public virtual DbSet<DeliveryAddress> DeliveryAddresses { get; set; } = null!;
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
@@ -281,7 +281,7 @@ public partial class BookdataContext : DbContext
             entity.Property(e => e.DeletedAt).HasColumnType("datetime");
             entity.Property(e => e.Discount).HasPrecision(10);
             entity.Property(e => e.EndDate).HasColumnType("datetime");
-            entity.Property(e => e.PromoType).HasColumnType("enum('Delivery','TotalBill')");
+            //entity.Property(e => e.PromoType).HasColumnType("enum('Delivery','TotalBill')");
             entity.Property(e => e.StartDate).HasColumnType("datetime");
         });
 

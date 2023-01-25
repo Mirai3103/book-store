@@ -45,7 +45,7 @@ export default function BillView({}: IProps) {
                     <div className="font-bold text-red-500">{toMoneyStringFormat(total)}đ</div>
                 </div>
                 <div className="px-4">
-                    <Button className="w-full mt-2">Thanh toán</Button>
+                    <Button className="w-full mt-2">Đặt hàng</Button>
                 </div>
             </div>
         </div>

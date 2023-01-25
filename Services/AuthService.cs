@@ -2,6 +2,7 @@
 using System.Net;
 using System.Security.Claims;
 using System.Text;
+using book_ecommerce.Controllers.Models;
 using book_ecommerce.Models;
 using book_ecommerce.Services.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -114,13 +115,13 @@ namespace book_ecommerce.Services
             _context.SaveChanges();
             return (accessToken, refreshToken, new
             {
-                Id = user.Id,
-                FullName = user.FullName,
-                Email = user.Email,
-                Avatar = user.Avatar,
-                Role = user.Role,
-                Address = user.Address,
-                Phone = user.Phone,
+                user.Id,
+                user.FullName,
+                user.Email,
+                user.Avatar,
+                user.Role,
+                //Address = user.Address,
+                user.Phone,
             });
         }
 
@@ -135,7 +136,7 @@ namespace book_ecommerce.Services
             _context.SaveChanges();
 
         }
-        public (string accessToken, string refreshToken, dynamic user) Register(User user)
+        public (string accessToken, string refreshToken, dynamic user) Register(UserRegisterPayload user)
         {
             if (string.IsNullOrEmpty(user.Email))
             {
@@ -154,19 +155,31 @@ namespace book_ecommerce.Services
             {
                 throw new HttpResponseException(HttpStatusCode.BadRequest, "Name is required");
             }
-            _context.Users.Add(user);
+
+            var newUser = new User
+            {
+                Email = user.Email,
+                Password = user.Password,
+                FullName = user.FullName,
+                Phone = user.Phone,
+                Avatar = user.Avatar,
+                CreatedAt = DateTime.Now,
+            };
+            _context.Users.Add(
+                newUser
+                 );
             _context.SaveChanges();
-            var accessToken = GenerateAccessToken(user);
-            var refreshToken = GenerateRefreshToken(user);
+            var accessToken = GenerateAccessToken(newUser);
+            var refreshToken = GenerateRefreshToken(newUser);
             return (accessToken, refreshToken, new
             {
-                Id = user.Id,
-                FullName = user.FullName,
-                Email = user.Email,
-                Avatar = user.Avatar,
-                Role = user.Role,
-                Address = user.Address,
-                Phone = user.Phone,
+                newUser.Id,
+                newUser.FullName,
+                newUser.Email,
+                newUser.Avatar,
+                newUser.Role,
+
+                newUser.Phone,
             });
 
         }
@@ -181,14 +194,14 @@ namespace book_ecommerce.Services
             var userId = int.Parse(userClaimsIndentity!.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             var user = _context.Users.Where(u => u.Id == userId).Select(u => new
             {
-                Id = u.Id,
-                FullName = u.FullName,
-                Email = u.Email,
-                Role = u.Role,
-                Avatar = u.Avatar,
-                CreatedAt = u.CreatedAt,
-                Phone = u.Phone,
-                Address = u.Address
+                u.Id,
+                u.FullName,
+                u.Email,
+                u.Role,
+                u.Avatar,
+                u.CreatedAt,
+                u.Phone,
+
             }).FirstOrDefault();
             if (user == null)
             {
@@ -203,13 +216,12 @@ namespace book_ecommerce.Services
             var accessToken = GenerateAccessToken(user);
             return (accessToken, new
             {
-                Id = user.Id,
-                FullName = user.FullName,
-                Email = user.Email,
-                Avatar = user.Avatar,
-                Role = user.Role,
-                Address = user.Address,
-                Phone = user.Phone,
+                user.Id,
+                user.FullName,
+                user.Email,
+                user.Avatar,
+                user.Role,
+                user.Phone,
             });
         }
     }

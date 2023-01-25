@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using book_ecommerce.Models;
 
@@ -10,9 +11,11 @@ using book_ecommerce.Models;
 namespace bookecommerce.Migrations
 {
     [DbContext(typeof(BookdataContext))]
-    partial class BookdataContextModelSnapshot : ModelSnapshot
+    [Migration("20230125122914_add")]
+    partial class add
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -1,6 +1,7 @@
 
 
 using System.Security.Claims;
+using book_ecommerce.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,7 +25,7 @@ public class SeriesController : ControllerBase
     [HttpGet(Name = "GetTopSeries")]
     public IActionResult GetTopSeries([FromQuery] int page = 1, [FromQuery] int limit = 10)
     {
-        if (!User.Identity.IsAuthenticated) return Ok(_seriesService.GetTopSeries(page, limit));
+        if (!User.Identity!.IsAuthenticated) return Ok(_seriesService.GetTopSeries(page, limit));
 
         var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
         return Ok(_seriesService.GetTopSeries(page, limit, userId));

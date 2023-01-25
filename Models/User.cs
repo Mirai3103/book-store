@@ -24,7 +24,6 @@ public partial class User
     public string Password { get; set; } = null!;
     public string? Phone { get; set; }
     public string? Avatar { get; set; }
-    public string? Address { get; set; }
     public Role Role { get; set; } = Models.Role.USER;
 
     public DateTime? CreatedAt { get; set; }
@@ -43,4 +42,5 @@ public partial class User
     public virtual Userpayment? Userpayment { get; set; }
 
     public virtual ICollection<Series> Series { get; } = new List<Series>();
+    public virtual ICollection<DeliveryAddress> DeliveryAddresses { get; } = new List<DeliveryAddress>();
 }

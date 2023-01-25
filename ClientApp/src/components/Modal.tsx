@@ -6,6 +6,7 @@ interface Props {
     isOpen: boolean;
     onRequestClose: () => void;
     children: React.ReactNode;
+    maxWidth?: string;
 }
 const customStyles: Md.Styles = {
     content: {
@@ -15,10 +16,9 @@ const customStyles: Md.Styles = {
         bottom: "auto",
         marginRight: "-50%",
         transform: "translate(-50%, -50%)",
-
-        width: "500px",
         padding: "0",
         border: "none",
+        width: "100%",
     },
     overlay: {
         backgroundColor: "rgba(0,0,0,0.85)",
@@ -26,11 +26,18 @@ const customStyles: Md.Styles = {
     },
 };
 Md.setAppElement("#root");
-export default function Modal({ isOpen, onRequestClose, children }: Props) {
+export default function Modal({ isOpen, onRequestClose, children, maxWidth }: Props) {
+    const style = {
+        ...customStyles,
+        content: {
+            ...customStyles.content,
+            maxWidth: maxWidth,
+        },
+    };
     return (
-        <Md isOpen={isOpen} onRequestClose={onRequestClose} style={customStyles} shouldCloseOnOverlayClick={true}>
+        <Md isOpen={isOpen} onRequestClose={onRequestClose} style={style} shouldCloseOnOverlayClick={true}>
             <div
-                className="hover:bg-primary-dark text-xl text-white rounded-full absolute right-0 p-1 cursor-pointer"
+                className="hover:bg-primary-dark maxw text-xl text-white rounded-full absolute right-0 p-1 cursor-pointer"
                 onClick={onRequestClose}
             >
                 <AiOutlineClose />

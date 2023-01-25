@@ -9,6 +9,7 @@ import SearchPage from "../pages/Search";
 import TestPage from "pages/Test";
 import TrendingPage from "pages/TrendingPage";
 import CartPage from "../pages/Cart/index";
+import CheckoutPage from "../pages/Checkout/index";
 
 // const routes2: RouteObject[] = [
 //     {
@@ -96,6 +97,10 @@ const routes = createBrowserRouter([
                     {
                         path: "/cart",
                         element: <CartPage />,
+                    },
+                    {
+                        path: "/checkout",
+                        element: <CheckoutPage />,
                     },
                 ],
             },

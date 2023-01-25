@@ -1,4 +1,5 @@
 
+namespace book_ecommerce.Services.Interface;
 public interface ICategoryService
 {
     public IEnumerable<dynamic> GetAllGroupByParent();

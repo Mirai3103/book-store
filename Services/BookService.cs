@@ -3,6 +3,8 @@ using System.Net;
 using book_ecommerce.Models;
 using Microsoft.EntityFrameworkCore;
 
+using book_ecommerce.Services.Interface;
+
 namespace book_ecommerce.Services;
 public class BookService : IBookService
 {
@@ -15,7 +17,6 @@ public class BookService : IBookService
     public dynamic AdvancedSearch(Query query)
     {
         var bookQuery = _context.Books.Where(b => b.DeletedAt == null);
-        Console.WriteLine(@"query.keyword: {0}", query.keyword);
         if (query.keyword != null)
         {
             bookQuery = bookQuery.Where(b => b.Title.Contains(query.keyword));
@@ -146,7 +147,7 @@ public class BookService : IBookService
     }
     public dynamic SelectPreview(Book b)
     {
-        return new { Id = b.Id, Alias = b.Alias, Author = b.Author, Price = b.Price, Episode = b.Episode, Title = b.Title, Name = b.Name, ImageCover = b.ImageCover, Discount = b.Discount, };
+        return new { b.Id, b.Alias, b.Author, b.Price, b.Episode, b.Title, b.Name, b.ImageCover, b.Discount, };
     }
 
 

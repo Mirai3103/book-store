@@ -3,6 +3,8 @@ using System.Linq;
 using System.Net;
 using book_ecommerce.Models;
 namespace book_ecommerce.Services;
+using book_ecommerce.Services.Interface;
+
 public class CategoryService : ICategoryService
 {
     private readonly BookdataContext _context;
