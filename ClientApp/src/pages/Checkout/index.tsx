@@ -12,7 +12,7 @@ interface IProps {}
 
 export default function CheckoutPage({}: IProps) {
     const cartItems = useAppSelector(selectCartItems);
-
+    const [addressId, setAddressId] = React.useState<number | null>(null);
     const dispath = useAppDispatch();
     const inBillItems = cartItems.filter((item) => item.isCheck);
     const navigate = useNavigate();
@@ -26,12 +26,12 @@ export default function CheckoutPage({}: IProps) {
         0
     );
     const handleCheckout = () => {
-        dispath(checkOutAsync());
+        dispath(checkOutAsync({ shippingAddressId: addressId }));
         navigate("/", { state: { message: "Đặt hàng thành công", type: "success" } });
     };
     return (
         <div className="w-full px-5 h-full flex flex-col gap-y-3 relative">
-            <ChooseAddress />
+            <ChooseAddress chooseId={addressId} setChooseId={setAddressId} />
             <Bill />
             <div className="h-32"></div>
             <div

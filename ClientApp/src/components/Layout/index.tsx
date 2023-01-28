@@ -25,6 +25,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         if (message) {
             createToast(type, message, type, 5000);
         }
+        //clear state
+        history.replaceState(null, "", location.pathname);
     }, [location.state]);
 
     return (

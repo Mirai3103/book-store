@@ -135,10 +135,12 @@ export interface Promocode {
 //         uint Quantity
 //     );
 export interface ICreateBillRequestModel {
-    shippingAddressId: number;
+    shippingAddressId: number | null | undefined;
     billDetails: IBillDetailRequestModel[];
     userId?: number;
     promoCode?: string;
+    newAddress?: DeliveryAddress;
+    isAnonymous?: boolean;
 }
 export interface IBillDetailRequestModel {
     bookId: number;

@@ -21,7 +21,9 @@ namespace book_ecommerce.Services
                 UserId = address.UserId,
                 IsPrimary = _context.DeliveryAddresses.FirstOrDefault(d => d.UserId == address.UserId) is null
             };
-            return _context.DeliveryAddresses.Add(newAddress);
+            _context.DeliveryAddresses.Add(newAddress);
+            _context.SaveChanges();
+            return newAddress;
         }
 
         public bool DeleteDeliveryAddress(uint id, int userId)

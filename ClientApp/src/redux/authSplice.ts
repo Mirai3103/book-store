@@ -37,14 +37,26 @@ export const authSplice = createSlice({
         },
     },
     extraReducers(builder) {
-        builder.addCase(fetchDeliveryAddressesAsync.fulfilled, (state, action) => {
-            state.deliveryAddresses = action.payload;
-        });
+        builder
+            .addCase(fetchDeliveryAddressesAsync.fulfilled, (state, action) => {
+                state.deliveryAddresses = action.payload;
+            })
+            .addCase(addDeliveryAddressAsync.fulfilled, (state, action) => {
+                if (state.deliveryAddresses) {
+                    state.deliveryAddresses.push(action.payload);
+                } else {
+                    state.deliveryAddresses = [action.payload];
+                }
+            });
     },
 });
 
 export const fetchDeliveryAddressesAsync = createAsyncThunk("auth/fetchDeliveryAddresses", async () => {
     const res = await authInstance.get("/api/DeliveryAddress/GetMyAddress");
+    return res.data;
+});
+export const addDeliveryAddressAsync = createAsyncThunk("auth/addDeliveryAddress", async (address: DeliveryAddress) => {
+    const res = await authInstance.post("/api/DeliveryAddress/CreateAddress", address);
     return res.data;
 });
 

@@ -2,7 +2,12 @@ import React from "react";
 import Input, { colors } from "./Form/Input";
 import Button, { ButtonOutline } from "./Button";
 import { useAppDispatch, useAppSelector } from "redux/hooks";
-import { selectIsAuthenticated, selectUser, fetchDeliveryAddressesAsync, setDeliveryAddresses } from "redux/authSplice";
+import {
+    selectIsAuthenticated,
+    addDeliveryAddressAsync,
+    fetchDeliveryAddressesAsync,
+    setDeliveryAddresses,
+} from "redux/authSplice";
 import { authInstance } from "../utils/axiosInstance";
 
 interface IProps {
@@ -17,20 +22,12 @@ export default function AddNewDeliveryAddressForm({ onClosed }: IProps) {
     const addressRef = React.useRef<HTMLInputElement>(null);
     const onSubmit = () => {
         if (isAuthenticated) {
-            authInstance
-                .post("/api/DeliveryAddress/CreateAddress", {
-                    address: addressRef.current?.value!,
-                    fullName: nameRef.current?.value!,
-                    phone: phoneRef.current?.value!,
-                    deletedAt: null,
-                    userId: -1,
-                })
-                .then((res) => {
-                    dispatch(fetchDeliveryAddressesAsync());
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
+            const address = {
+                address: addressRef.current?.value!,
+                fullName: nameRef.current?.value!,
+                phone: phoneRef.current?.value!,
+            };
+            dispatch(addDeliveryAddressAsync(address as any));
         } else {
             console.log(addressRef.current);
             dispatch(
@@ -47,7 +44,7 @@ export default function AddNewDeliveryAddressForm({ onClosed }: IProps) {
                 ])
             );
         }
-        // onClosed();
+        onClosed();
     };
     return (
         <div className="flex flex-col gap-y-2">

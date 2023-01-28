@@ -2,6 +2,7 @@
 using book_ecommerce.Services.Interface;
 using book_ecommerce.Models;
 using book_ecommerce.Controllers.Models;
+using Microsoft.EntityFrameworkCore;
 namespace book_ecommerce.Services
 {
     public class BillService : IBillService
@@ -21,8 +22,9 @@ namespace book_ecommerce.Services
             var newBill = new Bill()
             {
                 DeliveryAddressId = request.ShippingAddressId,
-                UserId = request.UserId ?? 1,
-                CreatedAt = DateTime.Now
+                UserId = request.UserId ?? -1,
+                CreatedAt = DateTime.Now,
+                Note = "null"
             };
             if (request.PromoCode != null)
             {
@@ -72,6 +74,14 @@ namespace book_ecommerce.Services
             newBill.TotalBill = listBillDetails.Sum(b => b.Price);
             _context.Billdetails.AddRange(listBillDetails);
             _context.SaveChanges();
+            if ((!request.IsAnonymous) ?? false)
+            {
+                var listBookId = request.BillDetails.Select(d => d.BookId).ToList();
+                _context.Cartdetails.RemoveRange(
+                     _context.Cartdetails.Where(d => listBookId.Contains((uint)d.BookId) && d.UserId == request.UserId)
+                    );
+                _context.SaveChanges();
+            }
             // update change from db to bill
             return true;
 

@@ -1,6 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import store, { RootState } from "./store";
-import { IBookPreview } from "../types/ServerEntity";
+import { IBookPreview, ICreateBillRequestModel } from "../types/ServerEntity";
 import { authInstance } from "../utils/axiosInstance";
 export interface CartItem {
     bookId: number;
@@ -170,14 +170,33 @@ export const setQuantityAsync = createAsyncThunk(
     }
 );
 
-export const checkOutAsync = createAsyncThunk("cart/checkOutAsync", async (_, { getState }) => {
-    // const isAuth = (getState() as any).auth.isAuthenticated;
-    // if (!isAuth) {
-    //     return;
-    // } else {
-    //     const res = await authInstance.post("/api/User/CheckOut");
-    // }
-});
+export const checkOutAsync = createAsyncThunk(
+    "cart/checkOutAsync",
+    async (
+        {
+            shippingAddressId,
+        }: {
+            shippingAddressId: number | null;
+        },
+        { getState }
+    ) => {
+        const state = getState() as RootState;
+        const inBill = state.cart.cartItems.filter((item) => item.isCheck);
+        const payload: ICreateBillRequestModel = {
+            billDetails: inBill.map((item) => {
+                return {
+                    bookId: item.bookId,
+                    quantity: item.quantity,
+                };
+            }),
+            shippingAddressId: state.auth.isAuthenticated ? shippingAddressId : undefined,
+            userId: state.auth.user?.id,
+            newAddress: state.auth.isAuthenticated ? undefined : state.auth.deliveryAddresses![0],
+            isAnonymous: !state.auth.isAuthenticated,
+        };
+        const res = await authInstance.post("/api/Bill/CreateBill", payload);
+    }
+);
 
 export const selectCartItems = (state: RootState) => state.cart.cartItems;
 export const { changeCartItemCheck, changeAllCartItemCheck, addListCartItem } = cartSplice.actions;

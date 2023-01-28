@@ -6,13 +6,15 @@ import AddNewDeliveryAddressForm from "../../components/AddNewDeliveryAddressFor
 import { MdAddCircleOutline } from "react-icons/md";
 import useToggle from "hooks/useToggle";
 import Modal from "components/Modal";
-interface IProps {}
+interface IProps {
+    chooseId: number | null;
+    setChooseId: (id: number | null) => void;
+}
 
-export default function ChooseAddress({}: IProps) {
+export default function ChooseAddress({ chooseId, setChooseId }: IProps) {
     //todo: get address list from server
     const addressList = useAppSelector(selectDeliveryAddresses);
     const isAuthenticated = useAppSelector(selectIsAuthenticated);
-    const [selectedAddress, setSelectedAddress] = React.useState<number | null>(null);
     const dispatch = useAppDispatch();
     const isDontNeedAddNewAddress = !isAuthenticated && addressList && addressList.length > 0;
     React.useEffect(() => {
@@ -25,9 +27,9 @@ export default function ChooseAddress({}: IProps) {
     React.useEffect(() => {
         const primaryAddress = addressList?.find((address: any) => address.isPrimary);
         if (primaryAddress) {
-            setSelectedAddress(primaryAddress.id);
+            setChooseId(primaryAddress.id);
         } else {
-            setSelectedAddress(addressList?.[0]?.id || null);
+            setChooseId(addressList?.[0]?.id || null);
         }
     }, [addressList]);
     const [isOpen, toggle, setTrue, setFalse] = useToggle(false);
@@ -41,8 +43,8 @@ export default function ChooseAddress({}: IProps) {
                             type="radio"
                             name="address"
                             className="mr-2 h-4 w-4"
-                            checked={selectedAddress === address.id}
-                            onChange={() => setSelectedAddress(address.id)}
+                            checked={chooseId === address.id}
+                            onChange={() => setChooseId(address.id)}
                         />
 
                         <div className="flex flex-col gap-y-2">
