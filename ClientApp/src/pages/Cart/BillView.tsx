@@ -4,6 +4,7 @@ import { RiCoupon2Fill } from "react-icons/ri";
 import { useAppSelector } from "../../redux/hooks";
 import { selectCartItems } from "redux/cartSplice";
 import { toMoneyStringFormat } from "../../utils/helper";
+import { Link } from "react-router-dom";
 interface IProps {}
 
 export default function BillView({}: IProps) {
@@ -45,7 +46,9 @@ export default function BillView({}: IProps) {
                     <div className="font-bold text-red-500">{toMoneyStringFormat(total)}đ</div>
                 </div>
                 <div className="px-4">
-                    <Button className="w-full mt-2">Đặt hàng</Button>
+                    <Link to="/checkout">
+                        <Button className="w-full mt-2">Đặt hàng</Button>
+                    </Link>
                 </div>
             </div>
         </div>

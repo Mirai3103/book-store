@@ -32,7 +32,7 @@ export default function ChooseAddress({}: IProps) {
     }, [addressList]);
     const [isOpen, toggle, setTrue, setFalse] = useToggle(false);
     return (
-        <div className="w-full bg-white rounded-md shadow-lg mt-3 mx-3 px-3 ">
+        <div className="w-full bg-white rounded-md shadow-md mt-3 mx-3 px-3 ">
             <div className="text-2xl p-4 border-b w-full font-bold mb-2 text-primary">Chọn địa chỉ giao hàng</div>
             {addressList &&
                 addressList.map((address) => (

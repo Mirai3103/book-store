@@ -3,10 +3,12 @@ import Header from "../Header";
 import { useLocation } from "react-router-dom";
 import LoadingScreen from "../LoadingScreen";
 import { BiChevronUpCircle } from "react-icons/bi";
+import { createToast } from "../Toast";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
     const reactLocation = useLocation();
     const [isLoaded, setIsLoaded] = React.useState(true);
+    const location = useLocation();
     const handleScrollToTop = () => {
         window.scrollTo(0, 0);
     };
@@ -17,6 +19,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             setIsLoaded(true);
         }, 100);
     }, [reactLocation.pathname]);
+    React.useEffect(() => {
+        const message = location.state?.message;
+        const type = location.state?.type || "info";
+        if (message) {
+            createToast(type, message, type, 5000);
+        }
+    }, [location.state]);
 
     return (
         <div className=" py-0 px-0 relative flex flex-col">

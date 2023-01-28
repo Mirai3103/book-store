@@ -90,6 +90,12 @@ export const cartSplice = createSlice({
                     item.isCheck = item.bookId === cartItem.bookId;
                     return item;
                 });
+            })
+            .addCase(checkOutAsync.fulfilled, (state, action) => {
+                state.cartItems = state.cartItems.filter((item) => !item.isCheck);
+            })
+            .addCase(checkOutAsync.rejected, (state, action) => {
+                console.log(action.error);
             });
     },
 });
@@ -163,6 +169,15 @@ export const setQuantityAsync = createAsyncThunk(
         return cartItem;
     }
 );
+
+export const checkOutAsync = createAsyncThunk("cart/checkOutAsync", async (_, { getState }) => {
+    // const isAuth = (getState() as any).auth.isAuthenticated;
+    // if (!isAuth) {
+    //     return;
+    // } else {
+    //     const res = await authInstance.post("/api/User/CheckOut");
+    // }
+});
 
 export const selectCartItems = (state: RootState) => state.cart.cartItems;
 export const { changeCartItemCheck, changeAllCartItemCheck, addListCartItem } = cartSplice.actions;
