@@ -5,6 +5,7 @@ using book_ecommerce.Models;
 using book_ecommerce.Services;
 using book_ecommerce.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 public class Startup
@@ -71,6 +72,15 @@ public class Startup
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
+        //app.UseSpa(spa =>
+        //{
+        //    spa.Options.SourcePath = "ClientApp";
+
+        //    if (env.IsDevelopment())
+        //    {
+        //        spa.UseReactDevelopmentServer(npmScript: "start");
+        //    }
+        //});
         if (env.IsDevelopment())
         {
             app.UseSwagger();

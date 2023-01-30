@@ -51,11 +51,16 @@ export interface ICategory {
 export interface IUser {
     id: number;
     phone: string;
-    role: number;
+    role: Role;
     fullName: string;
     email: string;
     avatar: string;
     address: string;
+}
+export enum Role {
+    ADMIN,
+    USER,
+    MANAGER,
 }
 // {
 //     "id": 1,

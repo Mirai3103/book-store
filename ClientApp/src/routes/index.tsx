@@ -10,46 +10,7 @@ import TestPage from "pages/Test";
 import TrendingPage from "pages/TrendingPage";
 import CartPage from "../pages/Cart/index";
 import CheckoutPage from "../pages/Checkout/index";
-
-// const routes2: RouteObject[] = [
-//     {
-//         path: "/",
-//         element: (
-//             <Layout>
-//                 <Home />
-//             </Layout>
-//         ),
-//     },
-//     {
-//         path: "/loading",
-//         element: <LoadingScreen />,
-//     },
-//     {
-//         path: "/book/:id",
-//         element: (
-//             <Layout>
-//                 <BookDetail />
-//             </Layout>
-//         ),
-//     },
-//     {
-//         path: "/search",
-//         element: (
-//             <Layout>
-//                 <Search />
-//             </Layout>
-//         ),
-//     },
-//     //404
-//     {
-//         path: "*",
-//         element: <Page404 />,
-//     },
-// ];
-// export default function Routes() {
-//     return useRoutes(routes2);
-// }
-
+import withAuthPage from "HOC/withAuth";
 function Default() {
     return <Outlet />;
 }
@@ -68,6 +29,7 @@ function AdminLayout() {
         </div>
     );
 }
+const AdminPage = withAuthPage(AdminLayout, true);
 
 const routes = createBrowserRouter([
     {
@@ -105,7 +67,7 @@ const routes = createBrowserRouter([
                 ],
             },
             {
-                element: <AdminLayout />,
+                element: <AdminPage />,
                 path: "admin",
                 children: [
                     {

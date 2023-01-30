@@ -5,6 +5,8 @@ import { selectCartItems } from "redux/cartSplice";
 import Popover from "components/Popover";
 import useToggle from "../../hooks/useToggle";
 import CartItemShortPreview from "components/Cart/CartItemShortPreview";
+import Button from "components/Button";
+import { Link } from "react-router-dom";
 
 function CartIcon() {
     const cartItems = useAppSelector(selectCartItems);
@@ -35,6 +37,9 @@ function CartIcon() {
                         {cartItems.map((item) => (
                             <CartItemShortPreview key={item.bookId} item={item} />
                         ))}
+                        <Link to="/cart" className="w-full flex justify-center">
+                            <Button className=" text-base">Xem giỏ hàng</Button>
+                        </Link>
                     </div>
                 ) : (
                     <div className="text-center w-96 py-2">Giỏ hàng trống</div>

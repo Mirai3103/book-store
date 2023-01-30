@@ -9,12 +9,14 @@ export interface AuthState {
     isAuthenticated: boolean;
     user: IUser | null;
     deliveryAddresses: DeliveryAddress[] | null;
+    hadTryToLogin: boolean;
 }
 
 const initialState: AuthState = {
     isAuthenticated: false,
     user: null,
     deliveryAddresses: null,
+    hadTryToLogin: false,
 };
 
 export const authSplice = createSlice({
@@ -24,12 +26,14 @@ export const authSplice = createSlice({
         login: (state, action: PayloadAction<IUser>) => {
             state.isAuthenticated = true;
             state.user = action.payload;
+            state.hadTryToLogin = true;
         },
         logout: (state) => {
             state.isAuthenticated = false;
             state.user = null;
             localStorage.removeItem("refreshToken");
             cookies.remove("accessToken");
+            state.hadTryToLogin = true;
             //dispatch(removeAllCartItem());
         },
         setDeliveryAddresses: (state, action: PayloadAction<DeliveryAddress[] | null>) => {
@@ -65,3 +69,4 @@ export const { login, logout, setDeliveryAddresses } = authSplice.actions;
 export const selectUser = (state: RootState) => state.auth.user;
 export const selectIsAuthenticated = (state: RootState) => state.auth.isAuthenticated;
 export const selectDeliveryAddresses = (state: RootState) => state.auth.deliveryAddresses;
+export const selectHadTryToLogin = (state: RootState) => state.auth.hadTryToLogin;

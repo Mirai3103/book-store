@@ -67,7 +67,7 @@ public class SeriesService : ISeriesService
 
     public void ToggleFollowSeries(int seriesId, int userId)
     {
-        var series = _context.Series.Find(seriesId);
+        var series = _context.Series.Include(s => s.Users).FirstOrDefault(s => s.Id == seriesId);
         var user = _context.Users.Find(userId);
         if (series is null || user is null)
         {

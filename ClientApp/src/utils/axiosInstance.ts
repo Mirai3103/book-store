@@ -87,8 +87,9 @@ authInstance.interceptors.request.use(
 authInstance.interceptors.response.use(
     (response) => response,
     async (error) => {
-        console.log(error);
-
+        if (axios.isCancel(error)) {
+            return Promise.reject(error);
+        }
         const code = error.response.status;
         const config = error.config;
         if (code === 401) {

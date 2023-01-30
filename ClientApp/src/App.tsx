@@ -19,6 +19,7 @@ function App() {
                 dispath(login(res.data));
             })
             .catch((err) => {
+                console.log(err);
                 if (err instanceof axios.CanceledError) {
                     dispath(logout());
                 }

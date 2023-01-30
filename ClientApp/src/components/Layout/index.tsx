@@ -16,6 +16,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         setIsLoaded(false);
         handleScrollToTop();
         setTimeout(() => {
+            const ev = new MouseEvent("mousedown", {
+                cancelable: true,
+                bubbles: true,
+                clientX: 1,
+                clientY: 1,
+            });
+            document.dispatchEvent(ev);
             setIsLoaded(true);
         }, 100);
     }, [reactLocation.pathname]);
